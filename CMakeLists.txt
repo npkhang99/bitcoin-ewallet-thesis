@@ -3,10 +3,7 @@ project(libbitcoin-thesis)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_CXX_FLAGS "-Wall -DWITH_PNG -DWITH_QRENCODE")
-
-set(source_dir "${PROJECT_SOURCE_DIR}/src/")
-file(GLOB source_files "${source_dir}/*.cpp")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -DWITH_PNG -DWITH_QRENCODE")
 
 link_directories(
         /usr/local/include
@@ -36,4 +33,4 @@ link_libraries(
         secp256k1
 )
 
-add_executable(libbitcoin-thesis ${source_files})
+add_executable(libbitcoin-thesis src/main.cpp src/functions.cpp)

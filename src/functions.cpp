@@ -56,5 +56,5 @@ std::string generate_address(const ec_key_pair &key_pair) {
             bc::wallet::payment_address(public_key_hash);
     assert(control.encoded() == bitcoin_address);
 
-    return control.encoded();
+    return bitcoin_address;
 }

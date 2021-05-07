@@ -1,6 +1,7 @@
 #ifndef LIBBITCOIN_THESIS_FUNCTIONS_H
 #define LIBBITCOIN_THESIS_FUNCTIONS_H
 
+#include <iostream>
 #include <string>
 #include <functional>
 

@@ -15,6 +15,21 @@ bc::ec_secret generate_secret(const std::string &secret_hex = "") {
 }
 
 ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
+    bc::data_chunk raw;
+
+//    raw.push_back(128);
+//    bc::extend_data(raw, secret);
+//    bc::append_checksum(raw);
+//    std::cerr << "Uncompressed private key: " << bc::encode_base58(raw) << std::endl;
+
+//    raw.clear();
+//    raw.push_back(128);
+//    bc::extend_data(raw, secret);
+//    raw.push_back(01); // append 0x01 suffix in secret for compressed private key
+//    bc::append_checksum(raw);
+//    std::cerr << "Compressed private key: " << bc::encode_base58(raw) << std::endl;
+
+    // default will be compressed private key (prefix will be K or L)
     bc::wallet::ec_private ec_private = bc::wallet::ec_private(secret);
     bc::wallet::ec_public ec_public = bc::wallet::ec_public(ec_private);
     return {ec_public, ec_private};

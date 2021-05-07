@@ -24,13 +24,6 @@ bc::ec_secret generate_secret(const std::string &secret_hex);
 ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret);
 
 /**
- * Convert public key hash to Base58Check encoding
- * @param payload the public key hash -- ripemd160(sha256(public_key))
- * @return Base58Check encoding for the public key hash
- */
-std::string base58_check_encode(const bc::short_hash &payload);
-
-/**
  * Generate a bitcoin payment address for the corresponding EC key pair
  * @param key_pair the EC key pair
  * @return Bitcoin payment address

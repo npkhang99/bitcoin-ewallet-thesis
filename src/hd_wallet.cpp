@@ -12,6 +12,9 @@ hd_wallet::hd_wallet(const bc::data_chunk& entropy) {
 }
 
 hd_wallet::hd_wallet(const bc::wallet::word_list &mnemonic) {
+    if (!bc::wallet::validate_mnemonic(mnemonic)) {
+        throw std::invalid_argument("Mnemonic not valid");
+    }
     _mnemonic = mnemonic;
     init_from_mnemonic();
 }

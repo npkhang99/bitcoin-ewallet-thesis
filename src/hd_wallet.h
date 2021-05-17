@@ -5,6 +5,8 @@
 #include <string>
 #include <bitcoin/bitcoin.hpp>
 
+#define _ENTROPY_BITS 128
+
 /**
  * HD Wallet implementation
  */

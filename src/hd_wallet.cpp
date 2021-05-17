@@ -6,7 +6,7 @@ hd_wallet::hd_wallet() {
     init_from_entropy();
 }
 
-hd_wallet::hd_wallet(const bc::data_chunk& entropy) {
+hd_wallet::hd_wallet(const bc::data_chunk &entropy) {
     _entropy = entropy;
     init_from_entropy();
 }
@@ -20,6 +20,7 @@ hd_wallet::hd_wallet(const bc::wallet::word_list &mnemonic) {
 }
 
 void hd_wallet::dumps() {
+    std::cout << "Entropy: " << bc::encode_base16(_entropy) << std::endl;
     std::cout << "Mnemonic: " << bc::join(_mnemonic) << std::endl;
     std::cout << "Root private key: " << _root_private.encoded() << std::endl;
     std::cout << "Root public key: " << _root_public.encoded() << std::endl;

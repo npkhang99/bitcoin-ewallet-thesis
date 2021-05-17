@@ -19,13 +19,13 @@ public:
      * Generate wallet from given entropy
      * @param entropy entropy to generate wallet from
      */
-    hd_wallet(const bc::data_chunk& entropy);
+    hd_wallet(const bc::data_chunk &entropy);
 
     /**
      * Generate wallet from givem mnemonic
      * @param mnemonic mnemonic to generate wallet from
      */
-    hd_wallet(const bc::wallet::word_list& mnemonic);
+    hd_wallet(const bc::wallet::word_list &mnemonic);
 
     /**
      * Dumps wallet data for debugging purposes
@@ -40,6 +40,7 @@ private:
     bc::wallet::hd_public _root_public;
 
     void init_from_entropy();
+
     void init_from_mnemonic();
 };
 

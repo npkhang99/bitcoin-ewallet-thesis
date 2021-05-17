@@ -10,10 +10,26 @@
  */
 class hd_wallet {
 public:
+    /**
+     * Default constructor to generate random seed wallet
+     */
     hd_wallet();
+
+    /**
+     * Generate wallet from given entropy
+     * @param entropy entropy to generate wallet from
+     */
     hd_wallet(const bc::data_chunk& entropy);
+
+    /**
+     * Generate wallet from givem mnemonic
+     * @param mnemonic mnemonic to generate wallet from
+     */
     hd_wallet(const bc::wallet::word_list& mnemonic);
 
+    /**
+     * Dumps wallet data for debugging purposes
+     */
     void dumps();
 
 private:

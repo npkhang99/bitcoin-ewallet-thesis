@@ -1,9 +1,10 @@
 #include <iostream>
 #include <string>
 
+#include "hd_wallet.h"
 #include "functions.h"
 
-int main() {
+void test_address() {
     bc::ec_secret secret_ec = generate_secret(
             "067375cf2f49e9bc7b759acdcc6b9cd43326a550415eff5ba8d5e266d7adfca3");
     std::cout << "EC secret:" << std::endl << bc::encode_base16(secret_ec)
@@ -17,5 +18,14 @@ int main() {
 
     std::string address = generate_address(key_pair);
     std::cout << "Bitcoin address:" << std::endl << address << std::endl;
+}
+
+void test_hd_wallet() {
+    hd_wallet wallet;
+    wallet.dumps();
+}
+
+int main() {
+    test_hd_wallet();
     return 0;
 }

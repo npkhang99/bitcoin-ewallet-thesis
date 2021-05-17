@@ -33,4 +33,4 @@ link_libraries(
         secp256k1
 )
 
-add_executable(libbitcoin-thesis src/main.cpp src/functions.cpp)
+add_executable(libbitcoin-thesis src/main.cpp src/functions.cpp src/hd_wallet.cpp src/hd_wallet.h)

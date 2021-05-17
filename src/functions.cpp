@@ -51,10 +51,12 @@ std::string generate_address(const ec_key_pair &key_pair) {
 
     std::string bitcoin_address = bc::encode_base58(raw);
 
+#ifdef DEBUG
     // validate with library's function
     bc::wallet::payment_address control =
             bc::wallet::payment_address(public_key_hash);
     assert(control.encoded() == bitcoin_address);
+#endif
 
     return bitcoin_address;
 }

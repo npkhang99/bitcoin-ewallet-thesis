@@ -62,8 +62,10 @@ void hd_wallet::init_from_entropy() {
         _mnemonic.push_back(bip39_dictionary[position]);
     }
 
+#ifdef DEBUG
     bc::wallet::word_list control = bc::wallet::create_mnemonic(_entropy);
     assert(_mnemonic == control);
+#endif
 
     init_from_mnemonic();
 }

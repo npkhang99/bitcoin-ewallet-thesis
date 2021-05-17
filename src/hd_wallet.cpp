@@ -3,12 +3,14 @@
 hd_wallet::hd_wallet() {
     _entropy = bc::data_chunk(_ENTROPY_BITS / 8);
     bc::pseudo_random_fill(_entropy);
-    init_from_entropy();
+    generate_mnemonic();
+    generate_root_keys();
 }
 
 hd_wallet::hd_wallet(const bc::data_chunk &entropy) {
     _entropy = entropy;
-    init_from_entropy();
+    generate_mnemonic();
+    generate_root_keys();
 }
 
 hd_wallet::hd_wallet(const bc::wallet::word_list &mnemonic) {
@@ -16,7 +18,7 @@ hd_wallet::hd_wallet(const bc::wallet::word_list &mnemonic) {
         throw std::invalid_argument("Mnemonic not valid");
     }
     _mnemonic = mnemonic;
-    init_from_mnemonic();
+    generate_root_keys();
 }
 
 void hd_wallet::dumps() {
@@ -34,7 +36,7 @@ std::string to_binary(uint8_t num) {
     return binary;
 }
 
-void hd_wallet::init_from_entropy() {
+void hd_wallet::generate_mnemonic() {
     size_t entropy_bits = _entropy.size() * 8;
     size_t checksum_bits = entropy_bits / 32;
     size_t data_bits = entropy_bits + checksum_bits;
@@ -66,11 +68,9 @@ void hd_wallet::init_from_entropy() {
     bc::wallet::word_list control = bc::wallet::create_mnemonic(_entropy);
     assert(_mnemonic == control);
 #endif
-
-    init_from_mnemonic();
 }
 
-void hd_wallet::init_from_mnemonic() {
+void hd_wallet::generate_root_keys() {
     _seed = bc::to_chunk(bc::wallet::decode_mnemonic(_mnemonic));
     _root_private = bc::wallet::hd_private(_seed);
     _root_public = _root_private.to_public();

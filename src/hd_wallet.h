@@ -41,9 +41,9 @@ private:
     bc::wallet::hd_private _root_private;
     bc::wallet::hd_public _root_public;
 
-    void init_from_entropy();
+    void generate_mnemonic();
 
-    void init_from_mnemonic();
+    void generate_root_keys();
 };
 
 

@@ -21,9 +21,14 @@ hd_wallet::hd_wallet(const bc::wallet::word_list &mnemonic) {
     generate_root_keys();
 }
 
+void hd_wallet::set_passphrase(const std::string &passphrase) {
+    _passphrase = passphrase;
+}
+
 void hd_wallet::dumps() {
     std::cout << "Entropy: " << bc::encode_base16(_entropy) << std::endl;
     std::cout << "Mnemonic: " << bc::join(_mnemonic) << std::endl;
+    std::cout << "Passphrase: " << _passphrase << std::endl;
     std::cout << "Root private key: " << _root_private.encoded() << std::endl;
     std::cout << "Root public key: " << _root_public.encoded() << std::endl;
 }
@@ -73,7 +78,7 @@ void hd_wallet::generate_mnemonic() {
 void hd_wallet::generate_root_keys() {
     _seed = bc::to_chunk(
             bc::pkcs5_pbkdf2_hmac_sha512(bc::to_chunk(bc::join(_mnemonic)),
-                                         bc::to_chunk(passphrase_prefix),
+                                         bc::to_chunk(PASSPHRASE_PREFIX + _passphrase),
                                          2048));
 
 #ifdef DEBUG

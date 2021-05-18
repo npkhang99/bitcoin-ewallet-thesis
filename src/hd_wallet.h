@@ -5,10 +5,6 @@
 #include <string>
 #include <bitcoin/bitcoin.hpp>
 
-#define _ENTROPY_BITS 128
-
-const std::string passphrase_prefix = "mnemonic";
-
 /**
  * HD Wallet implementation
  */
@@ -42,6 +38,10 @@ private:
     bc::wallet::word_list _mnemonic;
     bc::wallet::hd_private _root_private;
     bc::wallet::hd_public _root_public;
+    std::string _passphrase;
+
+    const std::size_t DEFAULT_ENTROPY_BITS = 128;
+    const std::string PASSPHRASE_PREFIX = "mnemonic";
 
     void generate_mnemonic();
 

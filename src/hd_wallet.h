@@ -7,6 +7,8 @@
 
 #define _ENTROPY_BITS 128
 
+const std::string passphrase_prefix = "mnemonic";
+
 /**
  * HD Wallet implementation
  */

@@ -71,7 +71,17 @@ void hd_wallet::generate_mnemonic() {
 }
 
 void hd_wallet::generate_root_keys() {
-    _seed = bc::to_chunk(bc::wallet::decode_mnemonic(_mnemonic));
+    _seed = bc::to_chunk(
+            bc::pkcs5_pbkdf2_hmac_sha512(bc::to_chunk(bc::join(_mnemonic)),
+                                         bc::to_chunk(passphrase_prefix),
+                                         2048));
+
+#ifdef DEBUG
+    bc::data_chunk control = bc::to_chunk(
+            bc::wallet::decode_mnemonic(_mnemonic));
+    assert(_seed == control);
+#endif
+
     _root_private = bc::wallet::hd_private(_seed);
     _root_public = _root_private.to_public();
 }

@@ -32,6 +32,28 @@ public:
      */
     void dumps();
 
+    /**
+     * BIP39 optional passphrase for seed generation process
+     * @param passphrase the passphrase
+     */
+    void set_passphrase(const std::string &passphrase);
+
+#ifdef DEBUG
+
+    bc::data_chunk get_entropy() {
+        return _entropy;
+    }
+
+    bc::data_chunk get_seed() {
+        return _seed;
+    }
+
+    bc::wallet::word_list get_mnemonic() {
+        return _mnemonic;
+    }
+
+#endif
+
 private:
     bc::data_chunk _entropy;
     bc::data_chunk _seed;

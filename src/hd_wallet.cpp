@@ -1,7 +1,7 @@
 #include "hd_wallet.h"
 
 hd_wallet::hd_wallet() {
-    _entropy = bc::data_chunk(_ENTROPY_BITS / 8);
+    _entropy = bc::data_chunk(DEFAULT_ENTROPY_BITS / 8);
     bc::pseudo_random_fill(_entropy);
     generate_mnemonic();
     generate_root_keys();
@@ -42,10 +42,10 @@ std::string to_binary(uint8_t num) {
 }
 
 void hd_wallet::generate_mnemonic() {
-    size_t entropy_bits = _entropy.size() * 8;
-    size_t checksum_bits = entropy_bits / 32;
-    size_t data_bits = entropy_bits + checksum_bits;
-    size_t word_counts = data_bits / 11;
+    std::size_t entropy_bits = _entropy.size() * 8;
+    std::size_t checksum_bits = entropy_bits / 32;
+    std::size_t data_bits = entropy_bits + checksum_bits;
+    std::size_t word_counts = data_bits / 11;
 
     bc::data_chunk data = _entropy;
     bc::extend_data(data, bc::sha256_hash_chunk(_entropy));
@@ -63,8 +63,9 @@ void hd_wallet::generate_mnemonic() {
     bc::wallet::dictionary bip39_dictionary = bc::wallet::language::en;
 
     _mnemonic.clear();
-    for (size_t word = 0; word < word_counts; word++) {
-        size_t position = std::stoi(data_str.substr(11 * word, 11), nullptr, 2);
+    for (std::size_t word = 0; word < word_counts; word++) {
+        std::size_t position = std::stoi(data_str.substr(11 * word, 11),
+                                         nullptr, 2);
         assert(position < bc::wallet::dictionary_size);
         _mnemonic.push_back(bip39_dictionary[position]);
     }

@@ -38,6 +38,26 @@ public:
      */
     void set_passphrase(const std::string &passphrase);
 
+    /**
+     * Get root public key
+     * @return wallet::hd_public root public key
+     */
+    bc::wallet::payment_address get_address();
+
+    /**
+     * BIP-32 HD Wallet private key derivation
+     * @param path key derivation path
+     * @return wallet::hd_private children private key
+     */
+    bc::wallet::hd_private derive_private(const std::vector<int> &path);
+
+    /**
+     * BIP-32 HD Wallet public key derivation
+     * @param path key derivation path
+     * @return wallet::hd_public children public key
+     */
+    bc::wallet::hd_public derive_public(const std::vector<int> &path);
+
 #ifdef DEBUG
 
     bc::data_chunk get_entropy() {

@@ -21,6 +21,26 @@ hd_wallet::hd_wallet(const bc::wallet::word_list &mnemonic) {
     generate_root_keys();
 }
 
+bc::wallet::payment_address hd_wallet::get_address() {
+    return bc::wallet::ec_public(_root_public.point()).to_payment_address();
+}
+
+bc::wallet::hd_private hd_wallet::derive_private(const std::vector<int> &path) {
+    bc::wallet::hd_private child_key = _root_private;
+    for (int index : path) {
+        child_key = child_key.derive_private(index);
+    }
+    return child_key;
+}
+
+bc::wallet::hd_public hd_wallet::derive_public(const std::vector<int> &path) {
+    bc::wallet::hd_public child_key = _root_public;
+    for (int index : path) {
+        child_key = child_key.derive_public(index);
+    }
+    return child_key;
+}
+
 void hd_wallet::set_passphrase(const std::string &passphrase) {
     _passphrase = passphrase;
     generate_root_keys();

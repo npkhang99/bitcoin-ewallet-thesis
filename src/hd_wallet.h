@@ -32,6 +32,12 @@ public:
      */
     void dumps();
 
+    /**
+     * BIP39 optional passphrase for seed generation process
+     * @param passphrase the passphrase
+     */
+    void set_passphrase(const std::string &passphrase);
+
 private:
     bc::data_chunk _entropy;
     bc::data_chunk _seed;

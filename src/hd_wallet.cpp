@@ -23,6 +23,7 @@ hd_wallet::hd_wallet(const bc::wallet::word_list &mnemonic) {
 
 void hd_wallet::set_passphrase(const std::string &passphrase) {
     _passphrase = passphrase;
+    generate_root_keys();
 }
 
 void hd_wallet::dumps() {
@@ -84,7 +85,7 @@ void hd_wallet::generate_root_keys() {
 
 #ifdef DEBUG
     bc::data_chunk control = bc::to_chunk(
-            bc::wallet::decode_mnemonic(_mnemonic));
+            bc::wallet::decode_mnemonic(_mnemonic, _passphrase));
     assert(_seed == control);
 #endif
 

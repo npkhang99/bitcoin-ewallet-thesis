@@ -35,8 +35,8 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
     return {ec_public, ec_private};
 }
 
-std::string generate_address(const ec_key_pair &key_pair) {
-    bc::wallet::ec_public public_key = key_pair.first;
+std::string generate_address(const bc::wallet::ec_public &public_key) {
+    // bc::wallet::ec_public public_key = key_pair.first;
     bc::data_chunk public_key_data;
     public_key.to_data(public_key_data);
 

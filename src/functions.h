@@ -29,6 +29,6 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret);
  * @param key_pair the EC key pair
  * @return Bitcoin payment address
  */
-std::string generate_address(const ec_key_pair &key_pair);
+std::string generate_address(const bc::wallet::ec_public &key_pair);
 
 #endif //LIBBITCOIN_THESIS_FUNCTIONS_H

@@ -17,7 +17,7 @@ void test_address() {
     std::cout << "EC public key:" << std::endl << key_pair.first.encoded()
               << std::endl;
 
-    std::string address = generate_address(key_pair);
+    std::string address = generate_address(key_pair.first);
     std::cout << "Bitcoin address:" << std::endl << address << std::endl;
 }
 
@@ -93,7 +93,7 @@ void test_hd_wallet() {
 #endif
 }
 
-int main() {
+void generate_ec_pubkey_secp256k1() {
     bc::data_chunk entropy;
     bc::decode_base16(entropy, "6b750e61ccf5ef5e208991bdc9259022");
     hd_wallet wallet(entropy);
@@ -134,5 +134,9 @@ int main() {
     }
 
     secp256k1_context_destroy(context);
+}
+
+int main() {
+    test_address();
     return 0;
 }

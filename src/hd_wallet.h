@@ -39,8 +39,8 @@ public:
     void set_passphrase(const std::string &passphrase);
 
     /**
-     * Get root public key
-     * @return wallet::hd_public root public key
+     * Get master public key
+     * @return wallet::hd_public master public key
      */
     bc::wallet::payment_address get_address();
 
@@ -78,8 +78,8 @@ private:
     bc::data_chunk _entropy;
     bc::data_chunk _seed;
     bc::wallet::word_list _mnemonic;
-    bc::wallet::hd_private _root_private;
-    bc::wallet::hd_public _root_public;
+    bc::wallet::hd_private _master_private;
+    bc::wallet::hd_public _master_public;
     std::string _passphrase;
 
     const std::size_t DEFAULT_ENTROPY_BITS = 128;
@@ -87,7 +87,7 @@ private:
 
     void generate_mnemonic();
 
-    void generate_root_keys();
+    void generate_master_keys();
 };
 
 

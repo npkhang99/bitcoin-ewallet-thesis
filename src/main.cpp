@@ -26,6 +26,7 @@ void test_hd_wallet() {
         wallet.dumps();
     }
 
+#ifdef DEBUG
     std::cout << "====================" << std::endl;
     std::cout << "Testing with Mastering bitcoin book's examples..."
               << std::endl;
@@ -88,6 +89,7 @@ void test_hd_wallet() {
 
         std::cout << "Test #3 passed" << std::endl;
     }
+#endif
 }
 
 int main() {

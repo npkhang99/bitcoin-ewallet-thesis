@@ -4,13 +4,13 @@ hd_wallet::hd_wallet() {
     _entropy = bc::data_chunk(DEFAULT_ENTROPY_BITS / 8);
     bc::pseudo_random_fill(_entropy);
     generate_mnemonic();
-    generate_root_keys();
+    generate_master_keys();
 }
 
 hd_wallet::hd_wallet(const bc::data_chunk &entropy) {
     _entropy = entropy;
     generate_mnemonic();
-    generate_root_keys();
+    generate_master_keys();
 }
 
 hd_wallet::hd_wallet(const bc::wallet::word_list &mnemonic) {
@@ -18,15 +18,15 @@ hd_wallet::hd_wallet(const bc::wallet::word_list &mnemonic) {
         throw std::invalid_argument("Mnemonic not valid");
     }
     _mnemonic = mnemonic;
-    generate_root_keys();
+    generate_master_keys();
 }
 
 bc::wallet::payment_address hd_wallet::get_address() {
-    return bc::wallet::ec_public(_root_public.point()).to_payment_address();
+    return bc::wallet::ec_public(_master_public.point()).to_payment_address();
 }
 
 bc::wallet::hd_private hd_wallet::derive_private(const std::vector<int> &path) {
-    bc::wallet::hd_private child_key = _root_private;
+    bc::wallet::hd_private child_key = _master_private;
     for (int index : path) {
         child_key = child_key.derive_private(index);
     }
@@ -34,7 +34,7 @@ bc::wallet::hd_private hd_wallet::derive_private(const std::vector<int> &path) {
 }
 
 bc::wallet::hd_public hd_wallet::derive_public(const std::vector<int> &path) {
-    bc::wallet::hd_public child_key = _root_public;
+    bc::wallet::hd_public child_key = _master_public;
     for (int index : path) {
         child_key = child_key.derive_public(index);
     }
@@ -43,15 +43,15 @@ bc::wallet::hd_public hd_wallet::derive_public(const std::vector<int> &path) {
 
 void hd_wallet::set_passphrase(const std::string &passphrase) {
     _passphrase = passphrase;
-    generate_root_keys();
+    generate_master_keys();
 }
 
 void hd_wallet::dumps() {
     std::cout << "Entropy: " << bc::encode_base16(_entropy) << std::endl;
     std::cout << "Mnemonic: " << bc::join(_mnemonic) << std::endl;
     std::cout << "Passphrase: " << _passphrase << std::endl;
-    std::cout << "Root private key: " << _root_private.encoded() << std::endl;
-    std::cout << "Root public key: " << _root_public.encoded() << std::endl;
+    std::cout << "Master private key: " << _master_private.encoded() << std::endl;
+    std::cout << "Master public key: " << _master_public.encoded() << std::endl;
 }
 
 std::string to_binary(uint8_t num) {
@@ -97,7 +97,7 @@ void hd_wallet::generate_mnemonic() {
 #endif
 }
 
-void hd_wallet::generate_root_keys() {
+void hd_wallet::generate_master_keys() {
     _seed = bc::to_chunk(
             bc::pkcs5_pbkdf2_hmac_sha512(bc::to_chunk(bc::join(_mnemonic)),
                                          bc::to_chunk(PASSPHRASE_PREFIX + _passphrase),
@@ -109,6 +109,6 @@ void hd_wallet::generate_root_keys() {
     assert(_seed == control);
 #endif
 
-    _root_private = bc::wallet::hd_private(_seed);
-    _root_public = _root_private.to_public();
+    _master_private = bc::wallet::hd_private(_seed);
+    _master_public = _master_private.to_public();
 }

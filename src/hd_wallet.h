@@ -22,7 +22,7 @@ public:
     hd_wallet(const bc::data_chunk &entropy);
 
     /**
-     * Generate wallet from givem mnemonic
+     * Generate wallet from given mnemonic
      * @param mnemonic mnemonic to generate wallet from
      */
     hd_wallet(const bc::wallet::word_list &mnemonic);

@@ -72,6 +72,14 @@ public:
         return _mnemonic;
     }
 
+    bc::wallet::hd_private get_master_private() {
+        return _master_private;
+    }
+
+    bc::wallet::hd_public get_master_public() {
+        return _master_public;
+    }
+
 #endif
 
 private:

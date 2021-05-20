@@ -1,11 +1,12 @@
-#ifndef LIBBITCOIN_THESIS_FUNCTIONS_H
-#define LIBBITCOIN_THESIS_FUNCTIONS_H
+#ifndef LIBBITCOIN_THESIS_UTILITIES_H
+#define LIBBITCOIN_THESIS_UTILITIES_H
 
 #include <iostream>
 #include <string>
 #include <functional>
 
 #include <bitcoin/bitcoin.hpp>
+#include <secp256k1.h>
 
 typedef std::pair<bc::wallet::ec_public, bc::wallet::ec_private> ec_key_pair;
 
@@ -31,4 +32,11 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret);
  */
 std::string generate_address(const bc::wallet::ec_public &key_pair);
 
-#endif //LIBBITCOIN_THESIS_FUNCTIONS_H
+/**
+ * Generate a compressed public key from given ec_secret
+ * @param secret the ec_secret to create public key from
+ * @return data_chunk of public key
+ */
+bc::data_chunk generate_ec_pubkey_secp256k1(const bc::ec_secret& secret);
+
+#endif //LIBBITCOIN_THESIS_UTILITIES_H

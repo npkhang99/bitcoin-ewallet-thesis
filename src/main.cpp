@@ -1,9 +1,8 @@
 #include <iostream>
 #include <string>
-#include <secp256k1.h>
 
 #include "hd_wallet.h"
-#include "functions.h"
+#include "utilities.h"
 
 void test_address() {
     bc::ec_secret secret_ec = generate_secret(
@@ -93,50 +92,9 @@ void test_hd_wallet() {
 #endif
 }
 
-void generate_ec_pubkey_secp256k1() {
-    bc::data_chunk entropy;
-    bc::decode_base16(entropy, "6b750e61ccf5ef5e208991bdc9259022");
-    hd_wallet wallet(entropy);
-    wallet.dumps();
-
-//    std::cerr << bc::encode_base16((bc::ec_secret) wallet.get_master_private()) << std::endl;
-//    std::cerr << bc::encode_base16(wallet.get_master_public().point()) << std::endl;
-
-    secp256k1_context *context = secp256k1_context_create(
-            SECP256K1_CONTEXT_VERIFY | SECP256K1_CONTEXT_SIGN);
-    secp256k1_pubkey pubkey;
-
-    bc::ec_secret secret = wallet.get_master_private().secret();
-    std::cerr << "Master secret key: " << bc::encode_base16(secret)
-              << std::endl;
-
-    bool success = secp256k1_ec_pubkey_create(context, &pubkey, secret.data());
-    if (!success) {
-        std::cerr << "error creating pubkey" << std::endl;
-    } else {
-        std::uint8_t serialized_pub[33];
-        std::size_t len = sizeof(serialized_pub);
-        secp256k1_ec_pubkey_serialize(context, serialized_pub, &len, &pubkey,
-                                      SECP256K1_EC_COMPRESSED);
-        bc::data_chunk pub_chunk(serialized_pub, serialized_pub + len);
-        std::cerr << "Got: " << bc::encode_base16(pub_chunk) << std::endl;
-
-        std::cerr << "Checking correctness... ";
-        if (bc::encode_base16(wallet.get_master_public().point()) ==
-                bc::encode_base16(pub_chunk)) {
-            std::cerr << "correct!" << std::endl;
-        } else {
-            std::cerr << "failed" << std::endl;
-            std::cerr << "Expected result: "
-                      << bc::encode_base16(wallet.get_master_public().point())
-                      << std::endl;
-        }
-    }
-
-    secp256k1_context_destroy(context);
-}
-
 int main() {
-    test_address();
+    hd_wallet wallet;
+    bc::data_chunk public_key = generate_ec_pubkey_secp256k1(wallet.get_master_private().secret());
+    std::cerr << bc::encode_base16(public_key) << std::endl;
     return 0;
 }

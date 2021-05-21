@@ -11,9 +11,9 @@ void test_address() {
               << std::endl;
 
     auto key_pair = generate_wallet_ec_key_pair(secret_ec);
-    std::cout << "EC private key:" << std::endl << key_pair.second.encoded()
+    std::cout << "EC private key:" << std::endl << bc::encode_base16(key_pair.second)
               << std::endl;
-    std::cout << "EC public key:" << std::endl << key_pair.first.encoded()
+    std::cout << "EC public key:" << std::endl << bc::encode_base16(key_pair.first)
               << std::endl;
 
     std::string address = generate_address(key_pair.first);
@@ -93,8 +93,6 @@ void test_hd_wallet() {
 }
 
 int main() {
-    hd_wallet wallet;
-    bc::data_chunk public_key = generate_ec_pubkey_secp256k1(wallet.get_master_private().secret());
-    std::cerr << bc::encode_base16(public_key) << std::endl;
+    test_address();
     return 0;
 }

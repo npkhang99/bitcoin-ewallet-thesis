@@ -15,31 +15,39 @@ bc::ec_secret generate_secret(const std::string &secret_hex = "") {
 }
 
 ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
-    bc::data_chunk raw;
+    bc::data_chunk ec_private;
 
 //    raw.push_back(128);
 //    bc::extend_data(raw, secret);
 //    bc::append_checksum(raw);
 //    std::cerr << "Uncompressed private key: " << bc::encode_base58(raw) << std::endl;
 
-//    raw.clear();
-//    raw.push_back(128);
-//    bc::extend_data(raw, secret);
-//    raw.push_back(01); // append 0x01 suffix in secret for compressed private key
-//    bc::append_checksum(raw);
-//    std::cerr << "Compressed private key: " << bc::encode_base58(raw) << std::endl;
+    ec_private.clear();
+    ec_private.push_back(128);
+    bc::extend_data(ec_private, secret);
+    ec_private.push_back(1); // append 0x01 suffix in secret for compressed private key
+    bc::append_checksum(ec_private);
 
-    // default will be compressed private key (prefix will be K or L)
-    bc::wallet::ec_private ec_private = bc::wallet::ec_private(secret);
-    bc::wallet::ec_public ec_public = bc::wallet::ec_public(ec_private);
+    bc::data_chunk ec_public = generate_ec_pubkey_secp256k1(secret);
+
+#ifdef DEBUG
+    bc::wallet::ec_private control_private = bc::wallet::ec_private(secret);
+    bc::wallet::ec_public control_pub = bc::wallet::ec_public(control_private);
+
+    std::cerr << "Private key:" << std::endl;
+    std::cerr << "   Got: " << bc::encode_base58(ec_private) << std::endl;
+    std::cerr << "Expect: " << control_private.encoded() << std::endl;
+    assert(bc::encode_base58(ec_private) == control_private.encoded());
+
+    std::cerr << "Pubic key:" << std::endl;
+    std::cerr << "   Got: " << bc::encode_base16(ec_public) << std::endl;
+    std::cerr << "Expect: " << control_pub.encoded() << std::endl;
+    assert(bc::encode_base16(ec_public) == control_pub.encoded());
+#endif
     return {ec_public, ec_private};
 }
 
-std::string generate_address(const bc::wallet::ec_public &public_key) {
-    // bc::wallet::ec_public public_key = key_pair.first;
-    bc::data_chunk public_key_data;
-    public_key.to_data(public_key_data);
-
+std::string generate_address(const bc::data_chunk &public_key_data) {
     // bc::bitcoin_short_hash = bc::ripemd160_hash(bc::sha256_hash(data))
     bc::short_hash public_key_hash = bc::bitcoin_short_hash(public_key_data);
 
@@ -61,7 +69,7 @@ std::string generate_address(const bc::wallet::ec_public &public_key) {
     return bitcoin_address;
 }
 
-bc::data_chunk generate_ec_pubkey_secp256k1(const bc::ec_secret& secret) {
+bc::data_chunk generate_ec_pubkey_secp256k1(const bc::ec_secret &secret) {
     secp256k1_context *context = secp256k1_context_create(
             SECP256K1_CONTEXT_VERIFY | SECP256K1_CONTEXT_SIGN);
     secp256k1_pubkey pub_raw;

@@ -10,6 +10,10 @@ hd_private::hd_private(const bc::data_chunk& seed, uint32_t prefix) {
     const auto hash_output = bc::hmac_sha512_hash(seed, magic);
     const auto split = bc::split(hash_output);
 
+    if (!bc::verify(split.left)) {
+        throw std::range_error("Master key is invalid (is 0 or >= n)");
+    }
+
     _secret = split.left;
     _chain_code = split.right;
 }

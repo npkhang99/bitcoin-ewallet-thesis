@@ -14,7 +14,8 @@ public:
 
     hd_private(const bc::data_chunk& seed, uint32_t prefix = mainnet);
 
-    const bc::byte_array<32>& secret() const;
+    const bc::byte_array<32>& get_secret() const;
+    const bc::byte_array<32>& get_chain() const;
 
 private:
     bc::byte_array<32> _secret;

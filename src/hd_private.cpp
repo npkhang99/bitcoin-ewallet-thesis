@@ -18,6 +18,10 @@ hd_private::hd_private(const bc::data_chunk& seed, uint32_t prefix) {
     _chain_code = split.right;
 }
 
-const bc::byte_array<32>& hd_private::secret() const {
+const bc::byte_array<32>& hd_private::get_secret() const {
     return _secret;
+}
+
+const bc::byte_array<32>& hd_private::get_chain() const {
+    return _chain_code;
 }

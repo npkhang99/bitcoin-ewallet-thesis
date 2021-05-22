@@ -19,13 +19,13 @@ public:
      * Generate wallet from given entropy
      * @param entropy entropy to generate wallet from
      */
-    hd_wallet(const bc::data_chunk &entropy);
+    hd_wallet(const bc::data_chunk& entropy);
 
     /**
      * Generate wallet from given mnemonic
      * @param mnemonic mnemonic to generate wallet from
      */
-    hd_wallet(const bc::wallet::word_list &mnemonic);
+    hd_wallet(const bc::wallet::word_list& mnemonic);
 
     /**
      * Dumps wallet data for debugging purposes
@@ -36,7 +36,7 @@ public:
      * BIP39 optional passphrase for seed generation process
      * @param passphrase the passphrase
      */
-    void set_passphrase(const std::string &passphrase);
+    void set_passphrase(const std::string& passphrase);
 
     /**
      * Get master public key
@@ -49,14 +49,14 @@ public:
      * @param path key derivation path
      * @return wallet::hd_private children private key
      */
-    bc::wallet::hd_private derive_private(const std::vector<int> &path);
+    bc::wallet::hd_private derive_private(const std::vector<int>& path);
 
     /**
      * BIP-32 HD Wallet public key derivation
      * @param path key derivation path
      * @return wallet::hd_public children public key
      */
-    bc::wallet::hd_public derive_public(const std::vector<int> &path);
+    bc::wallet::hd_public derive_public(const std::vector<int>& path);
 
 #ifdef DEBUG
 

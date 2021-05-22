@@ -1,6 +1,6 @@
 #include "utilities.h"
 
-bc::ec_secret generate_secret(const std::string &secret_hex = "") {
+bc::ec_secret generate_secret(const std::string& secret_hex = "") {
     bc::ec_secret secret_key;
 
     if (secret_hex.length() == 0) {
@@ -25,7 +25,8 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
     ec_private.clear();
     ec_private.push_back(128);
     bc::extend_data(ec_private, secret);
-    ec_private.push_back(1); // append 0x01 suffix in secret for compressed private key
+    ec_private.push_back(
+            1); // append 0x01 suffix in secret for compressed private key
     bc::append_checksum(ec_private);
 
     bc::data_chunk ec_public = generate_ec_pubkey_secp256k1(secret);
@@ -47,7 +48,7 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
     return {ec_public, ec_private};
 }
 
-std::string generate_address(const bc::data_chunk &public_key_data) {
+std::string generate_address(const bc::data_chunk& public_key_data) {
     // bc::bitcoin_short_hash = bc::ripemd160_hash(bc::sha256_hash(data))
     bc::short_hash public_key_hash = bc::bitcoin_short_hash(public_key_data);
 
@@ -69,8 +70,8 @@ std::string generate_address(const bc::data_chunk &public_key_data) {
     return bitcoin_address;
 }
 
-bc::data_chunk generate_ec_pubkey_secp256k1(const bc::ec_secret &secret) {
-    secp256k1_context *context = secp256k1_context_create(
+bc::data_chunk generate_ec_pubkey_secp256k1(const bc::ec_secret& secret) {
+    secp256k1_context* context = secp256k1_context_create(
             SECP256K1_CONTEXT_VERIFY | SECP256K1_CONTEXT_SIGN);
     secp256k1_pubkey pub_raw;
 

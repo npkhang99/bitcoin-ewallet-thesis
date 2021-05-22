@@ -83,9 +83,21 @@ void test_hd_wallet() {
     std::cout << std::endl;
 }
 
-void test_hd_private() {
-    hd_wallet wallet;
-    hd_private hd_priv(wallet.get_seed());
+void test_hd_wallet_keys() {
+    std::cout << "Testing wallet master keys generation..." << std::endl;
 
-    assert(wallet.get_master_private().secret() == hd_priv.secret());
+    hd_wallet wallet;
+    // test private key generation
+    hd_private hd_priv(wallet.get_seed());
+    assert(wallet.get_master_private().secret() == hd_priv.get_secret());
+
+    // test public key generation
+    hd_public hd_pub(hd_priv);
+    assert(wallet.get_master_public().point() == hd_pub.get_point());
+
+    // make sure bitcoin payment address is also correct
+    assert(bc::wallet::payment_address(wallet.get_master_public().point()) ==
+           generate_address(hd_pub.get_point()));
+
+    std::cout << "Passed..." << std::endl << std::endl;
 }

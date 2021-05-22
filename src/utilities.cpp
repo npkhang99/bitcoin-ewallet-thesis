@@ -28,7 +28,7 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
     ec_private.push_back(1); // compressed private key
     bc::append_checksum(ec_private);
 
-    bc::byte_array<33> ec_public = generate_ec_pubkey_secp256k1(secret);
+    bc::byte_array<33> ec_public = secp256k1_point(secret);
 
 #ifdef DEBUG
     bc::wallet::ec_private control_private = bc::wallet::ec_private(secret);
@@ -69,7 +69,7 @@ std::string generate_address(const bc::byte_array<33>& public_key_point) {
     return bitcoin_address;
 }
 
-bc::byte_array<33> generate_ec_pubkey_secp256k1(const bc::ec_secret& secret) {
+bc::byte_array<33> secp256k1_point(const bc::ec_secret& secret) {
     secp256k1_context* context = secp256k1_context_create(
             SECP256K1_CONTEXT_VERIFY | SECP256K1_CONTEXT_SIGN);
     secp256k1_pubkey pub_raw;

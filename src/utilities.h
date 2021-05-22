@@ -38,9 +38,11 @@ std::string generate_address(const bc::byte_array<33>& public_key_point);
 
 /**
  * Generate a compressed public key from given ec_secret
+ * In other words, return the coordinate pair resulting from EC point
+ * multiplication of the secp256k1 base point with the ec_secret
  * @param secret the ec_secret to create public key from
  * @return data_chunk of public key
  */
-bc::byte_array<33> generate_ec_pubkey_secp256k1(const bc::ec_secret& secret);
+bc::byte_array<33> secp256k1_point(const bc::ec_secret& secret);
 
 #endif //LIBBITCOIN_THESIS_UTILITIES_H

@@ -97,7 +97,7 @@ void test_hd_wallet_keys() {
 
     // make sure bitcoin payment address is also correct
     assert(bc::wallet::payment_address(wallet.get_master_public().point()) ==
-           generate_address(hd_pub.get_point()));
+           hd_pub.to_payment_address());
 
     std::cout << "Passed..." << std::endl << std::endl;
 }

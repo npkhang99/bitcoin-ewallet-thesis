@@ -25,11 +25,10 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
     ec_private.clear();
     ec_private.push_back(128);
     bc::extend_data(ec_private, secret);
-    ec_private.push_back(
-            1); // append 0x01 suffix in secret for compressed private key
+    ec_private.push_back(1); // compressed private key
     bc::append_checksum(ec_private);
 
-    bc::data_chunk ec_public = generate_ec_pubkey_secp256k1(secret);
+    bc::byte_array<33> ec_public = generate_ec_pubkey_secp256k1(secret);
 
 #ifdef DEBUG
     bc::wallet::ec_private control_private = bc::wallet::ec_private(secret);
@@ -48,9 +47,9 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
     return {ec_public, ec_private};
 }
 
-std::string generate_address(const bc::data_chunk& public_key_data) {
+std::string generate_address(const bc::byte_array<33>& public_key_point) {
     // bc::bitcoin_short_hash = bc::ripemd160_hash(bc::sha256_hash(data))
-    bc::short_hash public_key_hash = bc::bitcoin_short_hash(public_key_data);
+    bc::short_hash public_key_hash = bc::bitcoin_short_hash(public_key_point);
 
     // base58 check encode
     bc::data_chunk raw;
@@ -70,7 +69,7 @@ std::string generate_address(const bc::data_chunk& public_key_data) {
     return bitcoin_address;
 }
 
-bc::data_chunk generate_ec_pubkey_secp256k1(const bc::ec_secret& secret) {
+bc::byte_array<33> generate_ec_pubkey_secp256k1(const bc::ec_secret& secret) {
     secp256k1_context* context = secp256k1_context_create(
             SECP256K1_CONTEXT_VERIFY | SECP256K1_CONTEXT_SIGN);
     secp256k1_pubkey pub_raw;
@@ -85,14 +84,17 @@ bc::data_chunk generate_ec_pubkey_secp256k1(const bc::ec_secret& secret) {
     std::size_t len = sizeof(serialized_pub);
     secp256k1_ec_pubkey_serialize(context, serialized_pub, &len, &pub_raw,
                                   SECP256K1_EC_COMPRESSED);
-    bc::data_chunk pub_chunk(serialized_pub, serialized_pub + len);
+
+    bc::byte_array<33> pub_key;
+    std::move(std::begin(serialized_pub), std::end(serialized_pub), pub_key.begin());
+
     secp256k1_context_destroy(context);
 
 #ifdef DEBUG
     std::string expect = bc::encode_base16(
             bc::wallet::ec_public(bc::wallet::ec_private(secret)).point());
-    assert(expect == bc::encode_base16(pub_chunk));
+    assert(expect == bc::encode_base16(pub_key));
 #endif
 
-    return pub_chunk;
+    return pub_key;
 }

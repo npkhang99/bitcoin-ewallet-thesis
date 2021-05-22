@@ -8,7 +8,7 @@
 #include <bitcoin/bitcoin.hpp>
 #include <secp256k1.h>
 
-typedef bc::data_chunk ec_public;
+typedef bc::byte_array<33> ec_public;
 typedef bc::data_chunk ec_private;
 
 typedef std::pair<ec_public, ec_private> ec_key_pair;
@@ -31,16 +31,16 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret);
 
 /**
  * Generate a bitcoin payment address for the corresponding EC key pair
- * @param public_key_data the public key
+ * @param public_key_point the public key
  * @return Bitcoin payment address
  */
-std::string generate_address(const bc::data_chunk& public_key_data);
+std::string generate_address(const bc::byte_array<33>& public_key_point);
 
 /**
  * Generate a compressed public key from given ec_secret
  * @param secret the ec_secret to create public key from
  * @return data_chunk of public key
  */
-bc::data_chunk generate_ec_pubkey_secp256k1(const bc::ec_secret& secret);
+bc::byte_array<33> generate_ec_pubkey_secp256k1(const bc::ec_secret& secret);
 
 #endif //LIBBITCOIN_THESIS_UTILITIES_H

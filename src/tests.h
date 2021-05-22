@@ -17,4 +17,6 @@ void test_hd_wallet();
 
 void test_hd_wallet_keys();
 
+void test_bip32();
+
 #endif //LIBBITCOIN_THESIS_TESTS_H

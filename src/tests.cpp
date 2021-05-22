@@ -101,3 +101,200 @@ void test_hd_wallet_keys() {
 
     std::cout << "Passed..." << std::endl << std::endl;
 }
+
+void bip32_test_vector_1() {
+    std::cout << "Test vector #1..." << std::endl;
+
+    bc::data_chunk seed;
+    bc::decode_base16(seed, "000102030405060708090a0b0c0d0e0f");
+
+    std::cout << "Chain m... ";
+
+    bc::wallet::hd_private control_priv(seed);
+    bc::wallet::hd_public control_pub(control_priv);
+
+    hd_private priv(seed);
+    hd_public pub(priv);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0H... ";
+
+    control_pub = control_priv.derive_public(bc::wallet::hd_first_hardened_key);
+    control_priv = control_priv.derive_private(bc::wallet::hd_first_hardened_key);
+
+    pub = priv.derive_public(hd_public::first_hardened_key);
+    priv = priv.derive_private(hd_private::first_hardened_key);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0H/1... ";
+
+    control_pub = control_pub.derive_public(1);
+    control_priv = control_priv.derive_private(1);
+
+    pub = pub.derive_public(1);
+    priv = priv.derive_private(1);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0H/1/2H... ";
+
+    control_priv = control_priv.derive_private(bc::wallet::hd_first_hardened_key + 2);
+    control_pub = control_priv.to_public();
+
+    priv = priv.derive_private(hd_private::first_hardened_key + 2);
+    pub = priv.to_public();
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0H/2H/2... ";
+
+    control_pub = control_pub.derive_public(2);
+    control_priv = control_priv.derive_private(2);
+
+    priv = priv.derive_private(2);
+    pub = priv.to_public();
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0H/2/1000000000... ";
+
+    control_priv = control_priv.derive_private(1000000000);
+    control_pub = control_priv.to_public();
+
+    pub = pub.derive_public(1000000000);
+    priv = priv.derive_private(1000000000);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl;
+
+    std::cout << "passed!" << std::endl << std::endl;
+}
+
+void bip32_test_vector_2() {
+    std::cout << "Test vector #2..." << std::endl;
+
+    bc::data_chunk seed;
+    bc::decode_base16(seed, "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542");
+
+    std::cout << "Chain m... ";
+
+    bc::wallet::hd_private control_priv(seed);
+    bc::wallet::hd_public control_pub(control_priv);
+
+    hd_private priv(seed);
+    hd_public pub(priv);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0... ";
+
+    control_pub = control_pub.derive_public(0);
+    control_priv = control_priv.derive_private(0);
+
+    pub = priv.derive_public(0);
+    priv = priv.derive_private(0);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0/2147483647H... ";
+
+    control_priv = control_priv.derive_private(bc::wallet::hd_first_hardened_key + 2147483647);
+    control_pub = control_priv.to_public();
+
+    pub = priv.derive_public(hd_private::first_hardened_key + 2147483647);
+    priv = priv.derive_private(hd_private::first_hardened_key + 2147483647);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0/2147483647H/1... ";
+
+    control_priv = control_priv.derive_private(1);
+    control_pub = control_priv.to_public();
+
+    priv = priv.derive_private(1);
+    pub = pub.derive_public(1);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0/2147483647H/1/2147483646H... ";
+
+    control_priv = control_priv.derive_private(bc::wallet::hd_first_hardened_key + 2147483646);
+    control_pub = control_priv.to_public();
+
+    priv = priv.derive_private(hd_private::first_hardened_key + 2147483646);
+    pub = priv.to_public();
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0/2147483647H/1/2147483646H/2... ";
+
+    control_priv = control_priv.derive_private(2);
+    control_pub = control_pub.derive_public(2);
+
+    priv = priv.derive_private(2);
+    pub = pub.derive_public(2);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl;
+
+    std::cout << "passed!" << std::endl << std::endl;
+}
+
+void bip32_test_vector_3() {
+    std::cout << "Test vector #3..." << std::endl;
+
+    bc::data_chunk seed;
+    bc::decode_base16(seed, "4b381541583be4423346c643850da4b320e46a87ae3d2a4e6da11eba819cd4acba45d239319ac14f863b8d5ab5a0d0c64d2e8a1e7d1457df2e5a3c51c73235be");
+
+    std::cout << "Chain m... ";
+
+    bc::wallet::hd_private control_priv(seed);
+    bc::wallet::hd_public control_pub(control_priv);
+
+    hd_private priv(seed);
+    hd_public pub(priv);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl << "Chain m/0H... ";
+
+    control_pub = control_priv.derive_public(bc::wallet::hd_first_hardened_key);
+    control_priv = control_priv.derive_private(bc::wallet::hd_first_hardened_key);
+
+    pub = priv.derive_public(hd_public::first_hardened_key);
+    priv = priv.derive_private(hd_private::first_hardened_key);
+
+    assert(priv.encoded() == control_priv.encoded());
+    assert(pub.encoded() == control_pub.encoded());
+
+    std::cout << "ok" << std::endl;
+
+    std::cout << "passed!" << std::endl << std::endl;
+}
+
+void test_bip32() {
+    std::cout << "Testing with BIP32 tests..." << std::endl;
+
+    bip32_test_vector_1();
+    bip32_test_vector_2();
+    bip32_test_vector_3();
+
+    std::cout << "All BIP32 tests passed" << std::endl << std::endl;
+}

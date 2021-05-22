@@ -17,7 +17,7 @@ add_executable(
         src/hd_private.cpp src/hd_private.h
         src/tests.cpp src/tests.h
         src/hd_public.cpp src/hd_public.h
-)
+        src/hd_lineage.h)
 
 target_link_libraries(libbitcoin-thesis ${BITCOIN_LIBRARIES})
 target_link_directories(libbitcoin-thesis PUBLIC ${BITCOIN_LIBRARY_DIRS})

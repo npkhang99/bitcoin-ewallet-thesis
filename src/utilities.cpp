@@ -34,14 +34,14 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
     bc::wallet::ec_private control_private = bc::wallet::ec_private(secret);
     bc::wallet::ec_public control_pub = bc::wallet::ec_public(control_private);
 
-    std::cerr << "Private key:" << std::endl;
-    std::cerr << "   Got: " << bc::encode_base58(ec_private) << std::endl;
-    std::cerr << "Expect: " << control_private.encoded() << std::endl;
+//    std::cerr << "Private key:" << std::endl;
+//    std::cerr << "   Got: " << bc::encode_base58(ec_private) << std::endl;
+//    std::cerr << "Expect: " << control_private.encoded() << std::endl;
     assert(bc::encode_base58(ec_private) == control_private.encoded());
 
-    std::cerr << "Pubic key:" << std::endl;
-    std::cerr << "   Got: " << bc::encode_base16(ec_public) << std::endl;
-    std::cerr << "Expect: " << control_pub.encoded() << std::endl;
+//    std::cerr << "Pubic key:" << std::endl;
+//    std::cerr << "   Got: " << bc::encode_base16(ec_public) << std::endl;
+//    std::cerr << "Expect: " << control_pub.encoded() << std::endl;
     assert(bc::encode_base16(ec_public) == control_pub.encoded());
 #endif
     return {ec_public, ec_private};

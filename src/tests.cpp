@@ -82,3 +82,10 @@ void test_hd_wallet() {
 #endif
     std::cout << std::endl;
 }
+
+void test_hd_private() {
+    hd_wallet wallet;
+    hd_private hd_priv(wallet.get_seed());
+
+    assert(wallet.get_master_private().secret() == hd_priv.secret());
+}

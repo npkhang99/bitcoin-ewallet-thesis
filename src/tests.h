@@ -14,4 +14,6 @@ void test_address();
 
 void test_hd_wallet();
 
+void test_hd_private();
+
 #endif //LIBBITCOIN_THESIS_TESTS_H

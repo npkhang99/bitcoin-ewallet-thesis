@@ -58,25 +58,12 @@ std::string generate_address(const bc::byte_array<33>& public_key_point) {
 }
 
 bc::byte_array<33> secp256k1_point(const bc::ec_secret& secret) {
-    secp256k1_context* context = secp256k1_context_create(
-            SECP256K1_CONTEXT_VERIFY | SECP256K1_CONTEXT_SIGN);
-    secp256k1_pubkey pub_raw;
+    // secp256k1 generator point
+    auto gen_point = bc::base16_literal(
+            "0279BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798");
 
-    bool success = secp256k1_ec_pubkey_create(context, &pub_raw, secret.data());
-    if (!success) {
-        secp256k1_context_destroy(context);
-        throw std::runtime_error("Error creating pub_raw");
-    }
-
-    std::uint8_t serialized_pub[33];
-    std::size_t len = sizeof(serialized_pub);
-    secp256k1_ec_pubkey_serialize(context, serialized_pub, &len, &pub_raw,
-                                  SECP256K1_EC_COMPRESSED);
-
-    bc::byte_array<33> pub_key;
-    std::move(std::begin(serialized_pub), std::end(serialized_pub), pub_key.begin());
-
-    secp256k1_context_destroy(context);
+    bc::byte_array<33> pub_key(gen_point);
+    bc::ec_multiply(pub_key, secret);
 
 #ifdef DEBUG
     std::string expect = bc::encode_base16(

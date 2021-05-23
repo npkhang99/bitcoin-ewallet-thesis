@@ -5,6 +5,9 @@
 #include <string>
 #include <bitcoin/bitcoin.hpp>
 
+#include "hd_public.h"
+#include "hd_private.h"
+
 /**
  * HD Wallet implementation
  */
@@ -49,34 +52,34 @@ public:
      * @param path key derivation path
      * @return wallet::hd_private children private key
      */
-    bc::wallet::hd_private derive_private(const std::vector<int>& path);
+    hd_private derive_private(const std::vector<int>& path);
 
     /**
      * BIP-32 HD Wallet public key derivation
      * @param path key derivation path
      * @return wallet::hd_public children public key
      */
-    bc::wallet::hd_public derive_public(const std::vector<int>& path);
+    hd_public derive_public(const std::vector<int>& path);
 
 #ifdef DEBUG
 
-    bc::data_chunk get_entropy() {
+    bc::data_chunk get_entropy() const {
         return _entropy;
     }
 
-    bc::data_chunk get_seed() {
+    bc::data_chunk get_seed() const {
         return _seed;
     }
 
-    bc::wallet::word_list get_mnemonic() {
+    bc::wallet::word_list get_mnemonic() const {
         return _mnemonic;
     }
 
-    bc::wallet::hd_private get_master_private() {
+    hd_private get_master_private() const {
         return _master_private;
     }
 
-    bc::wallet::hd_public get_master_public() {
+    hd_public get_master_public() const {
         return _master_public;
     }
 
@@ -86,11 +89,11 @@ private:
     bc::data_chunk _entropy;
     bc::data_chunk _seed;
     bc::wallet::word_list _mnemonic;
-    bc::wallet::hd_private _master_private;
-    bc::wallet::hd_public _master_public;
+    hd_private _master_private;
+    hd_public _master_public;
     std::string _passphrase;
 
-    const std::size_t DEFAULT_ENTROPY_BITS = 128;
+    const std::size_t DEFAULT_ENTROPY_BITS = 256;
     const std::string PASSPHRASE_PREFIX = "mnemonic";
 
     void generate_mnemonic();

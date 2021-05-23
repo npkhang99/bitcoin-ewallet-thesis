@@ -89,14 +89,14 @@ void test_hd_wallet_keys() {
     hd_wallet wallet;
     // test private key generation
     hd_private hd_priv(wallet.get_seed());
-    assert(wallet.get_master_private().secret() == hd_priv.get_secret());
+    assert(wallet.get_master_private().get_secret() == hd_priv.get_secret());
 
     // test public key generation
     hd_public hd_pub(hd_priv);
-    assert(wallet.get_master_public().point() == hd_pub.get_point());
+    assert(wallet.get_master_public().get_point() == hd_pub.get_point());
 
     // make sure bitcoin payment address is also correct
-    assert(bc::wallet::payment_address(wallet.get_master_public().point()) ==
+    assert(bc::wallet::payment_address(wallet.get_master_public().get_point()) ==
            hd_pub.to_payment_address());
 
     std::cout << "Passed..." << std::endl << std::endl;

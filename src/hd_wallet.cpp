@@ -22,19 +22,19 @@ hd_wallet::hd_wallet(const bc::wallet::word_list& mnemonic) {
 }
 
 bc::wallet::payment_address hd_wallet::get_address() {
-    return bc::wallet::ec_public(_master_public.point()).to_payment_address();
+    return _master_public.to_payment_address();
 }
 
-bc::wallet::hd_private hd_wallet::derive_private(const std::vector<int>& path) {
-    bc::wallet::hd_private child_key = _master_private;
+hd_private hd_wallet::derive_private(const std::vector<int>& path) {
+    hd_private child_key = _master_private;
     for (int index : path) {
         child_key = child_key.derive_private(index);
     }
     return child_key;
 }
 
-bc::wallet::hd_public hd_wallet::derive_public(const std::vector<int>& path) {
-    bc::wallet::hd_public child_key = _master_public;
+hd_public hd_wallet::derive_public(const std::vector<int>& path) {
+    hd_public child_key = _master_public;
     for (int index : path) {
         child_key = child_key.derive_public(index);
     }
@@ -49,7 +49,8 @@ void hd_wallet::set_passphrase(const std::string& passphrase) {
 void hd_wallet::dumps() {
     std::cout << "Entropy: " << bc::encode_base16(_entropy) << std::endl;
     std::cout << "Mnemonic: " << bc::join(_mnemonic) << std::endl;
-    std::cout << "Passphrase: " << _passphrase << std::endl;
+    std::cout << "Passphrase: " << (_passphrase.empty() ? "(none)" : _passphrase)
+              << std::endl;
     std::cout << "Master private key: " << _master_private.encoded()
               << std::endl;
     std::cout << "Master public key: " << _master_public.encoded() << std::endl;
@@ -100,17 +101,19 @@ void hd_wallet::generate_mnemonic() {
 
 void hd_wallet::generate_master_keys() {
     _seed = bc::to_chunk(
-            bc::pkcs5_pbkdf2_hmac_sha512(bc::to_chunk(bc::join(_mnemonic)),
-                                         bc::to_chunk(PASSPHRASE_PREFIX +
-                                                      _passphrase),
-                                         2048));
+                bc::pkcs5_pbkdf2_hmac_sha512(
+                        bc::to_chunk(bc::join(_mnemonic)),
+                        bc::to_chunk(PASSPHRASE_PREFIX + _passphrase),
+                        2048
+                )
+            );
 
 #ifdef DEBUG
-    bc::data_chunk control = bc::to_chunk(
-            bc::wallet::decode_mnemonic(_mnemonic, _passphrase));
+    bc::data_chunk control =
+            bc::to_chunk(bc::wallet::decode_mnemonic(_mnemonic, _passphrase));
     assert(_seed == control);
 #endif
 
-    _master_private = bc::wallet::hd_private(_seed);
+    _master_private = hd_private(_seed);
     _master_public = _master_private.to_public();
 }

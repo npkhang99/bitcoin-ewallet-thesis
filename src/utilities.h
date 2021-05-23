@@ -27,7 +27,7 @@ bc::ec_secret generate_secret(const std::string& secret_hex);
  * @param secret the EC secret
  * @return a pair of wallet public and private key correspondingly
  */
-ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret);
+ec_key_pair generate_wallet_ec_key_pair(const bc::ec_secret& secret);
 
 /**
  * Generate a bitcoin payment address for the corresponding EC key pair

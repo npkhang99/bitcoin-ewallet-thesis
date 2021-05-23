@@ -14,7 +14,7 @@ bc::ec_secret generate_secret(const std::string& secret_hex = "") {
     return secret_key;
 }
 
-ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
+ec_key_pair generate_wallet_ec_key_pair(const bc::ec_secret& secret) {
     bc::data_chunk ec_private;
 
     ec_private.push_back(128);

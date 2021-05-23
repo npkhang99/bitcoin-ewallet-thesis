@@ -17,12 +17,6 @@ bc::ec_secret generate_secret(const std::string& secret_hex = "") {
 ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
     bc::data_chunk ec_private;
 
-//    raw.push_back(128);
-//    bc::extend_data(raw, secret);
-//    bc::append_checksum(raw);
-//    std::cerr << "Uncompressed private key: " << bc::encode_base58(raw) << std::endl;
-
-    ec_private.clear();
     ec_private.push_back(128);
     bc::extend_data(ec_private, secret);
     ec_private.push_back(1); // compressed private key
@@ -34,16 +28,10 @@ ec_key_pair generate_wallet_ec_key_pair(bc::ec_secret secret) {
     bc::wallet::ec_private control_private = bc::wallet::ec_private(secret);
     bc::wallet::ec_public control_pub = bc::wallet::ec_public(control_private);
 
-//    std::cerr << "Private key:" << std::endl;
-//    std::cerr << "   Got: " << bc::encode_base58(ec_private) << std::endl;
-//    std::cerr << "Expect: " << control_private.encoded() << std::endl;
     assert(bc::encode_base58(ec_private) == control_private.encoded());
-
-//    std::cerr << "Pubic key:" << std::endl;
-//    std::cerr << "   Got: " << bc::encode_base16(ec_public) << std::endl;
-//    std::cerr << "Expect: " << control_pub.encoded() << std::endl;
     assert(bc::encode_base16(ec_public) == control_pub.encoded());
 #endif
+
     return {ec_public, ec_private};
 }
 

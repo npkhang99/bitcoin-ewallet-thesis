@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <string>
+#include <stdexcept>
 #include <bitcoin/bitcoin.hpp>
 
 #include "hd_public.h"
@@ -25,7 +26,7 @@ public:
      * Base58Check encode bitcoin address
      * @return std::string the encoded address
      */
-    std::string encoded();
+    std::string encoded() const;
 
 private:
     uint8_t _version;

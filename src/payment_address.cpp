@@ -21,7 +21,11 @@ payment_address::payment_address(const bc::byte_array<33>& point, uint8_t versio
     _hash = bc::bitcoin_short_hash(point);
 }
 
-std::string payment_address::encoded() {
+std::string payment_address::encoded() const {
+    if (_hash == bc::null_short_hash) {
+        throw std::bad_function_call();
+    }
+
     bc::data_chunk raw;
     raw.push_back(_version); // version 0: bitcoin address
     bc::extend_data(raw, _hash); // append public key hash

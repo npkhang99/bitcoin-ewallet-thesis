@@ -4,7 +4,7 @@ void test_address() {
     bc::ec_secret secret_ec = generate_secret(
             "067375cf2f49e9bc7b759acdcc6b9cd43326a550415eff5ba8d5e266d7adfca3");
     auto key_pair = generate_wallet_ec_key_pair(secret_ec);
-    std::string address = generate_address(key_pair.first);
+    std::string address = payment_address(key_pair.first).encoded();
     std::cout << "Bitcoin address:" << std::endl << address << std::endl;
     std::cout << std::endl;
 }
@@ -97,7 +97,7 @@ void test_hd_wallet_keys() {
 
     // make sure bitcoin payment address is also correct
     assert(bc::wallet::payment_address(wallet.get_master_public().get_point()) ==
-           hd_pub.to_payment_address());
+           payment_address(hd_pub).encoded());
 
     std::cout << "Passed..." << std::endl << std::endl;
 }

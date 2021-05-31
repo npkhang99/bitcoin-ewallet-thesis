@@ -21,10 +21,6 @@ hd_wallet::hd_wallet(const bc::wallet::word_list& mnemonic) {
     generate_master_keys();
 }
 
-bc::wallet::payment_address hd_wallet::get_address() {
-    return _master_public.to_payment_address();
-}
-
 hd_private hd_wallet::derive_private(const std::vector<int>& path) {
     hd_private child_key = _master_private;
     for (int index : path) {

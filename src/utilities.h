@@ -30,13 +30,6 @@ bc::ec_secret generate_secret(const std::string& secret_hex);
 ec_key_pair generate_wallet_ec_key_pair(const bc::ec_secret& secret);
 
 /**
- * Generate a bitcoin payment address for the corresponding EC key pair
- * @param public_key_point the public key
- * @return Bitcoin payment address
- */
-std::string generate_address(const bc::byte_array<33>& public_key_point);
-
-/**
  * Generate a compressed public key from given ec_secret
  * In other words, return the coordinate pair resulting from EC point
  * multiplication of the secp256k1 base point with the ec_secret

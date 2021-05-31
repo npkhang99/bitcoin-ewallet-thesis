@@ -23,7 +23,6 @@ public:
     hd_public(const hd_private& priv);
 
     std::string encoded() const;
-    std::string to_payment_address() const;
 
     hd_public derive_public(uint32_t index) const;
 

@@ -8,6 +8,7 @@
 #include "hd_private.h"
 #include "hd_public.h"
 #include "hd_wallet.h"
+#include "payment_address.h"
 
 #include "utilities.h"
 

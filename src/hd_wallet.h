@@ -42,12 +42,6 @@ public:
     void set_passphrase(const std::string& passphrase);
 
     /**
-     * Get master public key
-     * @return wallet::hd_public master public key
-     */
-    bc::wallet::payment_address get_address();
-
-    /**
      * BIP-32 HD Wallet private key derivation
      * @param path key derivation path
      * @return wallet::hd_private children private key

@@ -20,10 +20,6 @@ hd_public::hd_public(const hd_private& priv) {
     }
 }
 
-std::string hd_public::to_payment_address() const {
-    return generate_address(_point);
-}
-
 const bc::byte_array<33>& hd_public::get_point() const {
     return _point;
 }

@@ -35,28 +35,6 @@ ec_key_pair generate_wallet_ec_key_pair(const bc::ec_secret& secret) {
     return {ec_public, ec_private};
 }
 
-std::string generate_address(const bc::byte_array<33>& public_key_point) {
-    // bc::bitcoin_short_hash = bc::ripemd160_hash(bc::sha256_hash(data))
-    bc::short_hash public_key_hash = bc::bitcoin_short_hash(public_key_point);
-
-    // base58 check encode
-    bc::data_chunk raw;
-    raw.push_back(0); // version 0: bitcoin address
-    bc::extend_data(raw, public_key_hash); // append public key hash
-    bc::append_checksum(raw); // calculate and append 4 bytes checksum
-
-    std::string bitcoin_address = bc::encode_base58(raw);
-
-#ifdef DEBUG
-    // validate with library's function
-    bc::wallet::payment_address control =
-            bc::wallet::payment_address(public_key_hash);
-    assert(control.encoded() == bitcoin_address);
-#endif
-
-    return bitcoin_address;
-}
-
 bc::byte_array<33> secp256k1_point(const bc::ec_secret& secret) {
     // secp256k1 generator point
     auto gen_point = bc::base16_literal(

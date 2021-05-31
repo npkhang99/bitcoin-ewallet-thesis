@@ -38,3 +38,7 @@ std::string payment_address::encoded() const {
 
     return bitcoin_address;
 }
+
+const bc::short_hash& payment_address::get_hash() const {
+    return _hash;
+}

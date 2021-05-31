@@ -10,7 +10,7 @@
 #include "hd_private.h"
 
 /**
- * Bitcoin
+ * Bitcoin payment address
  */
 class payment_address {
 public:
@@ -29,8 +29,12 @@ public:
      */
     std::string encoded() const;
 
+    const bc::short_hash& get_hash() const;
+
 private:
+    // chain version
     uint8_t _version;
+    // hash160 digest of the public key (secp256k1 point)
     bc::short_hash _hash;
 };
 

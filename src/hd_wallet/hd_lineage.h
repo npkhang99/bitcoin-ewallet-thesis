@@ -1,8 +1,6 @@
 #ifndef LIBBITCOIN_THESIS_HD_LINEAGE_H
 #define LIBBITCOIN_THESIS_HD_LINEAGE_H
 
-#include <iostream>
-
 struct hd_lineage {
     uint32_t version;
     uint8_t depth;

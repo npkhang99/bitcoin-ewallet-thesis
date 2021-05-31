@@ -5,10 +5,10 @@
 #include <string>
 #include <bitcoin/bitcoin.hpp>
 
-#include "hd_private.h"
-#include "hd_public.h"
-#include "hd_wallet.h"
-#include "payment_address.h"
+#include "hd_wallet/hd_private.h"
+#include "hd_wallet/hd_public.h"
+#include "hd_wallet/hd_wallet.h"
+#include "hd_wallet/payment_address.h"
 
 #include "utilities.h"
 

@@ -14,11 +14,16 @@ add_executable(
         src/main.cpp
         src/tests.cpp src/tests.h
         src/utilities.cpp src/utilities.h
+
         src/hd_wallet/hd_wallet.cpp src/hd_wallet/hd_wallet.h
         src/hd_wallet/hd_private.cpp src/hd_wallet/hd_private.h
         src/hd_wallet/hd_public.cpp src/hd_wallet/hd_public.h
         src/hd_wallet/hd_lineage.h
         src/hd_wallet/payment_address.cpp src/hd_wallet/payment_address.h
+
+        src/chain/transaction.cpp src/chain/transaction.h
+        src/chain/input.cpp src/chain/input.h
+        src/chain/output.cpp src/chain/output.h
 )
 
 target_link_libraries(libbitcoin-thesis ${BITCOIN_LIBRARIES})

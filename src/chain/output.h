@@ -14,7 +14,7 @@ public:
 
     void set_script_pub_key(const bc::data_slice& script_pub_key);
 
-    static bc::data_chunk to_pay_key_hash(const bc::short_hash& hash);
+    static bc::machine::operation::list to_pay_key_hash(const bc::short_hash& hash);
 
 private:
     uint64_t _satoshi;

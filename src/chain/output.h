@@ -14,7 +14,13 @@ public:
 
     void set_script_pub_key(const bc::data_slice& script_pub_key);
 
-    static bc::machine::operation::list to_pay_key_hash(const bc::short_hash& hash);
+    /**
+     * Manually create p2kh locking script with corresponding public key point
+     * hash
+     * @param pubkey the public key point hash
+     * @return list of p2kh operations
+     */
+    static bc::machine::operation::list make_pay_key_hash(const bc::short_hash& pubkey);
 
 private:
     uint64_t _satoshi;

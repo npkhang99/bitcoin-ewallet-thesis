@@ -11,8 +11,21 @@
 
 class transaction {
 public:
+    transaction();
+
+    void set_version(uint32_t version);
+
+    void set_locktime(uint32_t locktime);
+
+    void set_inputs(const std::vector<input>& inputs);
+
+    void set_outputs(const std::vector<output>& outputs);
 
 private:
+    uint32_t _version;
+    uint32_t _locktime;
+    std::vector<input> _inputs;
+    std::vector<output> _outputs;
 };
 
 

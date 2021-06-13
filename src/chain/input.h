@@ -8,23 +8,18 @@ class input {
 public:
     input();
 
-    const std::string& get_txid() const;
+    input(const bc::chain::output_point& previous_output);
 
-    void set_txid(const std::string& txid);
+    input(const bc::hash_digest& hash, uint32_t index);
 
-    uint8_t get_vout() const;
-
-    void set_vout(uint8_t vout);
-
-    uint32_t get_sequence() const;
+    void set_previous_output(const bc::chain::output_point& previous_output);
 
     void set_sequence(uint32_t sequence);
 
 private:
-    std::string _txid;
-    uint8_t vout;
+    bc::chain::output_point _previous_output;
     bc::data_chunk _script_sig;
-    uint32_t sequence;
+    uint32_t _sequence;
 };
 
 

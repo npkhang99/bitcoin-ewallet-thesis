@@ -2,26 +2,16 @@
 
 input::input() {}
 
-const std::string& input::get_txid() const {
-    return _txid;
-}
+input::input(const bc::chain::output_point& previous_output) :
+        _previous_output(previous_output) {}
 
-void input::set_txid(const std::string& txid) {
-    _txid = txid;
-}
+input::input(const bc::hash_digest& hash, uint32_t index) :
+        _previous_output(hash, index) {}
 
-uint8_t input::get_vout() const {
-    return vout;
-}
-
-void input::set_vout(uint8_t vout) {
-    input::vout = vout;
-}
-
-uint32_t input::get_sequence() const {
-    return sequence;
+void input::set_previous_output(const bc::chain::output_point& previous_output) {
+    _previous_output = previous_output;
 }
 
 void input::set_sequence(uint32_t sequence) {
-    input::sequence = sequence;
+    _sequence = sequence;
 }

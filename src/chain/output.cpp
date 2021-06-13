@@ -8,15 +8,15 @@ void output::set_satoshi(uint64_t satoshi) {
     _satoshi = satoshi;
 }
 
-const bc::data_slice& output::get_script_pub_key() const {
+const bc::data_chunk& output::get_script_pub_key() const {
     return _script_pub_key;
 }
 
-void output::set_script_pub_key(const bc::data_slice& script_pub_key) {
+void output::set_script_pub_key(const bc::data_chunk& script_pub_key) {
     _script_pub_key = script_pub_key;
 }
 
-bc::machine::operation::list output::make_pay_key_hash(const bc::short_hash& pubkey) {
+bc::data_chunk output::make_locking_script(const bc::short_hash& pubkey) {
     bc::machine::operation::list p2kh;
     p2kh.push_back(bc::machine::operation(bc::machine::opcode::dup));
     p2kh.push_back(bc::machine::operation(bc::machine::opcode::hash160));
@@ -33,5 +33,13 @@ bc::machine::operation::list output::make_pay_key_hash(const bc::short_hash& pub
     assert(control_p2kh == p2kh);
 #endif
 
-    return p2kh;
+    return bc::chain::script(p2kh).to_data(true);
+}
+
+bc::data_chunk output::to_data() const {
+    bc::data_chunk output_chunk;
+    bc::extend_data(output_chunk, bc::to_little_endian(_satoshi));
+    output_chunk.push_back(_script_pub_key.size());
+    bc::extend_data(output_chunk, _script_pub_key);
+    return bc::data_chunk();
 }

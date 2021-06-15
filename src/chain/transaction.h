@@ -12,13 +12,14 @@
 class transaction {
 public:
     transaction();
+    transaction(uint32_t version, uint32_t locktime);
+    transaction(uint32_t version, uint32_t locktime,
+                const std::vector<input>& inputs,
+                const std::vector<output>& outputs);
 
     void set_version(uint32_t version);
-
     void set_locktime(uint32_t locktime);
-
     void set_inputs(const std::vector<input>& inputs);
-
     void set_outputs(const std::vector<output>& outputs);
 
 private:

@@ -24,7 +24,7 @@ add_executable(
         src/chain/transaction.cpp src/chain/transaction.h
         src/chain/input.cpp src/chain/input.h
         src/chain/output.cpp src/chain/output.h
-)
+        src/chain/chain_utilities.cpp src/chain/chain_utilities.h)
 
 target_link_libraries(libbitcoin-thesis ${BITCOIN_LIBRARIES})
 target_link_directories(libbitcoin-thesis PUBLIC ${BITCOIN_LIBRARY_DIRS})

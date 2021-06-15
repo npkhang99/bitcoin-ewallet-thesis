@@ -298,3 +298,82 @@ void test_bip32() {
 
     std::cout << "All BIP32 tests passed" << std::endl << std::endl;
 }
+
+void test_transaction() {
+    std::cout << "Testing transaction creation process with libbitcoin's example..."
+              << std::endl;
+
+    auto sender_secret = bc::base16_literal(
+            "3eec08386d08321cd7143859e9bf4d6f65a71d24f37536d76b4224fdea48009f");
+    bc::wallet::ec_private sender_private(sender_secret, bc::wallet::ec_private::testnet);
+    bc::ec_compressed sender_pubkey = sender_private.to_public().point();
+    bc::wallet::payment_address sender_address = sender_private.to_payment_address();
+
+    std::string receiver_address_raw = "mmbmNXo7QZWU2WgWwvrtnyQrwffngWScFe";
+    bc::wallet::payment_address receiver_address(receiver_address_raw);
+
+    std::string btc_amount_str = "1.295";
+    uint64_t satoshi_amount;
+    bc::decode_base10(satoshi_amount, btc_amount_str, bc::btc_decimal_places);
+
+    std::string prev_tx_string_0 = "ca05e6c14fe816c93b91dd4c8f00e60e4a205da85741f26326d6f21f9a5ac5e9";
+    bc::hash_digest prev_tx_hash_0;
+    bc::decode_hash(prev_tx_hash_0,prev_tx_string_0);
+
+    uint32_t input_index = 0;
+    bc::chain::output_point uxto_to_spend(prev_tx_hash_0, input_index);
+
+    // Self-implemented transaction
+    transaction tx(1, 0);
+
+    input in;
+    in.set_previous_output(uxto_to_spend);
+    in.set_sequence(0xffffffff);
+    tx.add_input(in);
+
+    output out;
+    out.set_script(make_locking_script(receiver_address.hash()));
+    out.set_satoshi(satoshi_amount);
+    tx.add_output(out);
+
+    sign(tx, sender_pubkey, sender_address.hash(), sender_secret, 0x01);
+
+#ifdef DEBUG
+    bc::chain::transaction control_tx;
+    control_tx.set_version(1);
+
+    bc::chain::input control_input;
+    control_input.set_previous_output(uxto_to_spend);
+    control_input.set_sequence(0xffffffff);
+
+    control_tx.inputs().push_back(control_input);
+
+    bc::machine::operation::list locking_script =
+            bc::chain::script::to_pay_key_hash_pattern(receiver_address.hash());
+
+    bc::chain::output control_output(satoshi_amount, locking_script);
+    control_tx.outputs().push_back(control_output);
+
+    bc::endorsement control_sig;
+    bc::chain::script control_prev_script =
+            bc::chain::script::to_pay_key_hash_pattern(sender_address.hash());
+    bc::chain::script::create_endorsement(control_sig, sender_secret,
+                                          control_prev_script, control_tx,
+                                          input_index, 0x01);
+
+    bc::machine::operation::list control_sig_script;
+    control_sig_script.push_back(bc::machine::operation(control_sig));
+    control_sig_script.push_back(bc::machine::operation(bc::to_chunk(sender_pubkey)));
+
+    bc::chain::script control_input_script(control_sig_script);
+
+    control_tx.inputs()[0].set_script(control_input_script);
+
+    assert(control_tx.to_data() == tx.to_data());
+#endif
+
+    std::cout << "ok" << std::endl << "Raw transaction:" << std::endl;
+    std::cout << bc::encode_base16(tx.to_data()) << std::endl;
+
+    std::cout << "passed!" << std::endl << std::endl;
+}

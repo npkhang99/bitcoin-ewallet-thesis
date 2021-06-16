@@ -27,6 +27,7 @@ public:
     hd_public derive_public(uint32_t index) const;
 
     const bc::byte_array<33>& get_point() const;
+    const hd_lineage& get_lineage() const;
 
 private:
     bc::byte_array<33> _point;

@@ -8,15 +8,26 @@ const uint32_t payment_address::payment_size = 1u + bc::short_hash_size + bc::ch
 
 payment_address::payment_address() : _version(0), _hash(bc::null_short_hash) {}
 
-payment_address::payment_address(const payment_address& o) :
-        _version(o._version), _hash(o._hash) {}
+payment_address::payment_address(const payment_address& o)
+        : _version(o._version), _hash(o._hash) {}
 
-payment_address::payment_address(const hd_public& pubkey, uint8_t version) :
-        _version(version), _hash(bc::bitcoin_short_hash(pubkey.get_point())) {}
+payment_address::payment_address(const hd_public& pubkey)
+        : _hash(bc::bitcoin_short_hash(pubkey.get_point())) {
+    if (pubkey.get_lineage().version == hd_public::mainnet) {
+        _version = mainnet_p2kh;
+    } else {
+        _version = testnet_p2kh;
+    }
+}
 
-payment_address::payment_address(const hd_private& privkey, uint8_t version) :
-        _version(version),
-        _hash(bc::bitcoin_short_hash(privkey.to_public().get_point())) {}
+payment_address::payment_address(const hd_private& privkey)
+        : _hash(bc::bitcoin_short_hash(privkey.to_public().get_point())) {
+    if (privkey.get_lineage().version == hd_private::mainnet) {
+        _version = mainnet_p2kh;
+    } else {
+        _version = testnet_p2kh;
+    }
+}
 
 payment_address::payment_address(const bc::byte_array<33>& point, uint8_t version)
         : _version(version), _hash(bc::bitcoin_short_hash(point)) {}
@@ -38,7 +49,7 @@ std::string payment_address::encoded() const {
     }
 
     bc::data_chunk raw;
-    raw.push_back(_version); // version 0: bitcoin address
+    raw.push_back(_version); // address version
     bc::extend_data(raw, _hash); // append public key hash
     bc::append_checksum(raw); // calculate and append 4 bytes checksum
 
@@ -46,7 +57,8 @@ std::string payment_address::encoded() const {
 
 #ifdef DEBUG
     // validate with library's function
-    bc::wallet::payment_address control = bc::wallet::payment_address(_hash);
+    bc::wallet::payment_address control =
+            bc::wallet::payment_address(_hash, _version);
     assert(control.encoded() == bitcoin_address);
 #endif
 

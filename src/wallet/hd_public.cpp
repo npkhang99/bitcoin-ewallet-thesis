@@ -78,3 +78,7 @@ uint32_t hd_public::fingerprint() const {
 hd_public::hd_public(const bc::byte_array<33>& point, const hd_lineage& lineage,
                      const bc::byte_array<32>& chain_code) :
         _point(point), _lineage(lineage), _chain_code(chain_code) {}
+
+const hd_lineage& hd_public::get_lineage() const {
+    return _lineage;
+}

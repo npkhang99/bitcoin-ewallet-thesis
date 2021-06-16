@@ -15,11 +15,11 @@ add_executable(
         src/tests.cpp src/tests.h
         src/utilities.cpp src/utilities.h
 
-        src/hd_wallet/hd_wallet.cpp src/hd_wallet/hd_wallet.h
-        src/hd_wallet/hd_private.cpp src/hd_wallet/hd_private.h
-        src/hd_wallet/hd_public.cpp src/hd_wallet/hd_public.h
-        src/hd_wallet/hd_lineage.h
-        src/hd_wallet/payment_address.cpp src/hd_wallet/payment_address.h
+        src/wallet/hd_wallet.cpp src/wallet/hd_wallet.h
+        src/wallet/hd_private.cpp src/wallet/hd_private.h
+        src/wallet/hd_public.cpp src/wallet/hd_public.h
+        src/wallet/hd_lineage.h
+        src/wallet/payment_address.cpp src/wallet/payment_address.h
 
         src/chain/transaction.cpp src/chain/transaction.h
         src/chain/input.cpp src/chain/input.h

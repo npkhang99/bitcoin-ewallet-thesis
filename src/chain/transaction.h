@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <bitcoin/bitcoin.hpp>
 
-#include "../hd_wallet/payment_address.h"
+#include "../wallet/payment_address.h"
 
 #include "input.h"
 #include "output.h"

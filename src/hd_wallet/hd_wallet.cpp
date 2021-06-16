@@ -1,23 +1,34 @@
 #include "hd_wallet.h"
 
-hd_wallet::hd_wallet() {
+hd_wallet::hd_wallet() : hd_wallet(false) {}
+
+hd_wallet::hd_wallet(bool testnet) {
     _entropy = bc::data_chunk(DEFAULT_ENTROPY_BITS / 8);
     bc::pseudo_random_fill(_entropy);
+    _testnet = testnet;
+
     generate_mnemonic();
     generate_master_keys();
 }
 
-hd_wallet::hd_wallet(const bc::data_chunk& entropy) {
+hd_wallet::hd_wallet(const bc::data_chunk& entropy, bool testnet) {
     _entropy = entropy;
+    _testnet = testnet;
+
     generate_mnemonic();
     generate_master_keys();
 }
 
-hd_wallet::hd_wallet(const bc::wallet::word_list& mnemonic) {
+hd_wallet::hd_wallet(const std::string& mnemonic_sentence, bool testnet)
+        : hd_wallet(bc::split(mnemonic_sentence), testnet) {}
+
+hd_wallet::hd_wallet(const bc::wallet::word_list& mnemonic, bool testnet) {
     if (!bc::wallet::validate_mnemonic(mnemonic)) {
         throw std::invalid_argument("Mnemonic not valid");
     }
     _mnemonic = mnemonic;
+    _testnet = testnet;
+
     generate_master_keys();
 }
 
@@ -40,16 +51,6 @@ hd_public hd_wallet::derive_public(const std::vector<int>& path) {
 void hd_wallet::set_passphrase(const std::string& passphrase) {
     _passphrase = passphrase;
     generate_master_keys();
-}
-
-void hd_wallet::dumps() {
-    std::cout << "Entropy: " << bc::encode_base16(_entropy) << std::endl;
-    std::cout << "Mnemonic: " << bc::join(_mnemonic) << std::endl;
-    std::cout << "Passphrase: " << (_passphrase.empty() ? "(none)" : _passphrase)
-              << std::endl;
-    std::cout << "Master private key: " << _master_private.encoded()
-              << std::endl;
-    std::cout << "Master public key: " << _master_public.encoded() << std::endl;
 }
 
 std::string to_binary(uint8_t num) {
@@ -110,6 +111,15 @@ void hd_wallet::generate_master_keys() {
     assert(_seed == control);
 #endif
 
-    _master_private = hd_private(_seed);
+    if (_testnet) {
+        _master_private = hd_private(_seed, hd_private::testnet);
+    } else {
+        _master_private = hd_private(_seed);
+    }
+
     _master_public = _master_private.to_public();
+
+    std::cout << "Wallet successfully created" << std::endl;
+    std::cout << "Your mnemonic is:" << std::endl;
+    std::cout << bc::join(_mnemonic) << std::endl;
 }

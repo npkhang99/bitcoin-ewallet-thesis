@@ -13,27 +13,12 @@
  */
 class hd_wallet {
 public:
-    /**
-     * Default constructor to generate random seed wallet
-     */
+    /// Constructors
     hd_wallet();
-
-    /**
-     * Generate wallet from given entropy
-     * @param entropy entropy to generate wallet from
-     */
-    hd_wallet(const bc::data_chunk& entropy);
-
-    /**
-     * Generate wallet from given mnemonic
-     * @param mnemonic mnemonic to generate wallet from
-     */
-    hd_wallet(const bc::wallet::word_list& mnemonic);
-
-    /**
-     * Dumps wallet data for debugging purposes
-     */
-    void dumps();
+    hd_wallet(bool testnet);
+    hd_wallet(const bc::data_chunk& entropy, bool testnet = false);
+    hd_wallet(const std::string& mnemonic_sentence, bool testnet = false);
+    hd_wallet(const bc::wallet::word_list& mnemonic, bool testnet = false);
 
     /**
      * BIP39 optional passphrase for seed generation process
@@ -56,6 +41,19 @@ public:
     hd_public derive_public(const std::vector<int>& path);
 
 #ifdef DEBUG
+
+    /**
+     * Dumps wallet data for debugging purposes
+     */
+    void dumps() const {
+        std::cout << "Entropy: " << bc::encode_base16(_entropy) << std::endl;
+        std::cout << "Mnemonic: " << bc::join(_mnemonic) << std::endl;
+        std::cout << "Passphrase: " << (_passphrase.empty() ? "(none)" : _passphrase)
+                  << std::endl;
+        std::cout << "Master private key: " << _master_private.encoded()
+                  << std::endl;
+        std::cout << "Master public key: " << _master_public.encoded() << std::endl;
+    }
 
     bc::data_chunk get_entropy() const {
         return _entropy;
@@ -80,6 +78,8 @@ public:
 #endif
 
 private:
+    bool _testnet;
+
     bc::data_chunk _entropy;
     bc::data_chunk _seed;
     bc::wallet::word_list _mnemonic;

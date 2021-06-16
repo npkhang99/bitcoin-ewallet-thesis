@@ -37,9 +37,8 @@ private:
 
     uint32_t fingerprint() const;
 
-    hd_public(const libbitcoin::byte_array<33>& point,
-              const hd_lineage& lineage,
-              const libbitcoin::byte_array<32>& chain_code);
+    hd_public(const bc::byte_array<33>& point, const hd_lineage& lineage,
+              const bc::byte_array<32>& chain_code);
 };
 
 

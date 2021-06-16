@@ -34,9 +34,7 @@ std::string hd_public::encoded() const {
     bc::extend_data(serialized, _point);
     bc::append_checksum(serialized);
 
-    std::string to_str = bc::encode_base58(serialized);
-
-    return to_str;
+    return bc::encode_base58(serialized);
 }
 
 hd_public hd_public::derive_public(uint32_t index) const {
@@ -77,7 +75,6 @@ uint32_t hd_public::fingerprint() const {
     return out;
 }
 
-hd_public::hd_public(const libbitcoin::byte_array<33>& point,
-                     const hd_lineage& lineage,
-                     const libbitcoin::byte_array<32>& chain_code) :
+hd_public::hd_public(const bc::byte_array<33>& point, const hd_lineage& lineage,
+                     const bc::byte_array<32>& chain_code) :
         _point(point), _lineage(lineage), _chain_code(chain_code) {}

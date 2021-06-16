@@ -100,7 +100,7 @@ uint32_t hd_private::fingerprint() const {
     return out;
 }
 
-hd_private::hd_private(const libbitcoin::byte_array<32>& secret,
+hd_private::hd_private(const bc::byte_array<32>& secret,
                        const hd_lineage& lineage,
-                       const libbitcoin::byte_array<32>& chain_code) :
+                       const bc::byte_array<32>& chain_code) :
         _secret(secret), _lineage(lineage), _chain_code(chain_code) {}

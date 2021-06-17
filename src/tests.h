@@ -25,4 +25,6 @@ void test_bip32();
 
 void test_transaction();
 
+void test_transaction_testnet();
+
 #endif //LIBBITCOIN_THESIS_TESTS_H

@@ -377,3 +377,71 @@ void test_transaction() {
 
     std::cout << "passed!" << std::endl << std::endl;
 }
+
+void test_transaction_testnet() {
+    hd_wallet wallet("sting finish sponsor damage upon unique hard shiver tuition gate ceiling tenant very already museum chuckle annual bottom main erupt slot crush paddle speak", true);
+
+    hd_private sender_priv = wallet.get_master_private().derive_private(0);
+    hd_public sender_pub = sender_priv.to_public();
+    payment_address sender_address(sender_pub);
+
+    hd_private receiver_priv = sender_priv.derive_private(0);
+    hd_public receiver_pub = receiver_priv.to_public();
+    payment_address receiver_address(receiver_pub);
+
+    std::cout << std::endl;
+
+    std::cout << "Sender address: " << sender_address.encoded() << std::endl;
+    std::cout << "Receiver address: " << receiver_address.encoded() << std::endl;
+
+    /**
+     *  txid 1: 84e892dab4f3126912bc34f57272227ffe8bdf97b3b3264d04b6c23e793e7a77
+     *   index: 1
+     * balance: 0.0005 btc
+     *
+     *  txid 2: ca3bb0d628214465a25b04362205e37d5dd5e0cb4ea614186098da823270f01d
+     *   index: 0
+     * balance: 0.0005 btc
+     */
+
+    transaction tx;
+    tx.set_version(1);
+    tx.set_locktime(0);
+
+    input in0;
+    std::string previous_tx0 = "84e892dab4f3126912bc34f57272227ffe8bdf97b3b3264d04b6c23e793e7a77";
+    bc::hash_digest txid0;
+    bc::decode_hash(txid0, previous_tx0);
+    in0.set_previous_output(txid0, 1);
+    in0.set_sequence(0xffffffff);
+    tx.add_input(in0);
+
+    input in1;
+    std::string previous_tx1 = "ca3bb0d628214465a25b04362205e37d5dd5e0cb4ea614186098da823270f01d";
+    bc::hash_digest txid1;
+    bc::decode_hash(txid1, previous_tx1);
+    in1.set_previous_output(txid1, 0);
+    in1.set_sequence(0xffffffff);
+    tx.add_input(in1);
+
+    output out0;
+    auto lock0 = make_locking_script(receiver_address.get_hash());
+    out0.set_script(lock0);
+    out0.set_satoshi(10);
+    tx.add_output(out0);
+
+    output change;
+    auto change_lock = make_locking_script(sender_address.get_hash());
+    change.set_script(change_lock);
+    change.set_satoshi(89990);
+    tx.add_output(change);
+
+    sign(tx, sender_pub.get_point(), sender_address.get_hash(),
+         sender_priv.get_secret(), 0x01);
+
+    std::cout << "Raw transaction: " << bc::encode_base16(tx.to_data())
+              << std::endl;
+
+    // success
+    // https://www.blockchain.com/btc-testnet/tx/3fc4f65bdc71e6327e252e47a96c625353b3376746ee5340e0656b230bdf58e5
+}

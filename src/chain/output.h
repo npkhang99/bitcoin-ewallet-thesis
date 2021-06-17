@@ -6,6 +6,10 @@
 
 class output {
 public:
+    output();
+
+    output(uint64_t satoshi, const bc::chain::script& script);
+
     uint64_t get_satoshi() const;
 
     void set_satoshi(uint64_t satoshi);

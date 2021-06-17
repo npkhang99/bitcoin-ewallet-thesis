@@ -1,5 +1,10 @@
 #include "output.h"
 
+output::output() : _satoshi(0) {}
+
+output::output(uint64_t satoshi, const bc::chain::script& script)
+        : _satoshi(satoshi), _script(script) {}
+
 uint64_t output::get_satoshi() const {
     return _satoshi;
 }

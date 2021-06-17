@@ -63,14 +63,6 @@ void transaction::set_message(const std::string& message) {
     _outputs.push_back(message_out);
 }
 
-std::vector<input>& transaction::inputs() {
-    return _inputs;
-}
-
-std::vector<output>& transaction::outputs() {
-    return _outputs;
-}
-
 template <class T>
 void serialize_vector(bc::data_chunk& raw, std::vector<T> v) {
     raw.push_back(v.size());

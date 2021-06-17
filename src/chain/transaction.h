@@ -30,22 +30,26 @@ public:
     uint32_t get_version() const;
     uint32_t get_locktime() const;
 
-    // accessors
-    std::vector<input>& inputs();
-    std::vector<output>& outputs();
-
     bc::data_chunk to_data() const;
 
-    // sign and return DER encoded EC signature
-    bc::data_chunk sign_input(uint32_t index, const bc::chain::script& script_code,
-                              const bc::byte_array<bc::ec_secret_size>& secret,
-                              uint8_t sighash_type);
+    void sign(uint32_t index, const bc::byte_array<bc::ec_compressed_size>& pubkey,
+              const bc::short_hash& pubkey_hash,
+              const bc::byte_array<bc::ec_secret_size>& secret,
+              uint8_t sighash_type);
 
 private:
     uint32_t _version;
     uint32_t _locktime;
     std::vector<input> _inputs;
     std::vector<output> _outputs;
+
+    void prepare_inputs(std::vector<input>& inputs, uint32_t index,
+                        const bc::chain::script& original_script_code);
+
+    // sign and return DER encoded EC signature
+    bc::data_chunk sign(const transaction& tx, const bc::chain::script& script_code,
+                        const bc::byte_array<bc::ec_secret_size>& secret,
+                        uint8_t sighash_type);
 };
 
 

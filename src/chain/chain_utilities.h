@@ -32,17 +32,11 @@ bc::hash_digest create_signature_hash(const transaction& tx,
                                       uint32_t sighash_type);
 
 /**
- * Sign all inputs of a given transaction
- * @param tx the transaction to be signed
- * @param pubkey the public key
- * @param pubkey_hash the public key HASH160 digest
- * @param secret the secret key
- * @param sighash_type signature hash type
+ * Strip the script codes separators for signing transactions because
+ * bitcoin-core will freak out when sign input with separators in the op codes
+ * @param script_code the original script
+ * @return the original script with separators stripped
  */
-void sign(transaction& tx,
-          const bc::byte_array<bc::ec_compressed_size>& pubkey,
-          const bc::short_hash& pubkey_hash,
-          const bc::byte_array<bc::ec_secret_size>& secret,
-          uint8_t sighash_type);
+bc::chain::script strip_code_separators(const bc::chain::script& script_code);
 
 #endif //LIBBITCOIN_THESIS_CHAIN_UTILITIES_H

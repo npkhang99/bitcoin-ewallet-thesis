@@ -71,40 +71,6 @@ std::vector<output>& transaction::outputs() {
     return _outputs;
 }
 
-bc::data_chunk transaction::sign_input(uint32_t index,
-                                       const bc::chain::script& script_code,
-                                       const bc::byte_array<bc::ec_secret_size>& secret,
-                                       uint8_t sighash_type) {
-    std::vector<input> inputs;
-
-    // erase all input scripts
-    for (const auto& in : _inputs) {
-        inputs.push_back(input(in.get_previous_output(), bc::chain::script{},
-                               in.get_sequence()));
-    }
-
-    // restore the script of the input we want to sign
-    inputs[index].set_script_sig(script_code);
-
-    transaction signing(_version, _locktime, inputs, _outputs);
-    bc::hash_digest sighash = create_signature_hash(signing, sighash_type);
-    // EC signature
-    bc::ec_signature signature;
-    if (!bc::sign(signature, secret, sighash)) {
-        throw std::runtime_error("something went wrong when signing transaction");
-    }
-
-    // encode EC signature as DER
-    bc::data_chunk der;
-    if (!bc::encode_signature(der, signature)) {
-        throw std::runtime_error("something went wrong when encode signature");
-    }
-
-    // add sighash type to end of DER sequence
-    der.push_back(sighash_type);
-    return der;
-}
-
 template <class T>
 void serialize_vector(bc::data_chunk& raw, std::vector<T> v) {
     raw.push_back(v.size());
@@ -122,4 +88,56 @@ bc::data_chunk transaction::to_data() const {
     bc::extend_data(raw, bc::to_little_endian(_locktime));
 
     return raw;
+}
+
+void transaction::prepare_inputs(std::vector<input>& inputs, uint32_t index,
+                    const bc::chain::script& original_script_code) {
+    // erase all input scripts
+    for (const auto& in : _inputs) {
+        inputs.push_back(input(in.get_previous_output(), bc::chain::script{},
+                               in.get_sequence()));
+    }
+
+    // restore the script of the input we want to sign
+    inputs[index].set_script_sig(original_script_code);
+}
+
+bc::data_chunk transaction::sign(const transaction& tx,
+                                 const bc::chain::script& script_code,
+                                 const bc::byte_array<bc::ec_secret_size>& secret,
+                                 uint8_t sighash_type) {
+    bc::hash_digest sighash = create_signature_hash(tx, sighash_type);
+    // EC signature
+    bc::ec_signature signature;
+    if (!bc::sign(signature, secret, sighash)) {
+        throw std::runtime_error("something went wrong when signing transaction");
+    }
+
+    // encode EC signature as DER
+    bc::data_chunk der;
+    if (!bc::encode_signature(der, signature)) {
+        throw std::runtime_error("something went wrong when encode signature");
+    }
+
+    // add sighash type to end of DER sequence
+    der.push_back(sighash_type);
+    return der;
+}
+
+void transaction::sign(uint32_t index, const bc::byte_array<bc::ec_compressed_size>& pubkey,
+                       const bc::short_hash& pubkey_hash,
+                       const bc::byte_array<bc::ec_secret_size>& secret,
+                       uint8_t sighash_type) {
+    const auto script_code = make_locking_script(pubkey_hash);
+    const auto stripped = strip_code_separators(script_code);
+
+    std::vector<input> inputs;
+    prepare_inputs(inputs, index, stripped);
+
+    transaction sign_tx(_version, _locktime, inputs, _outputs);
+
+    const auto signature = sign(sign_tx, stripped, secret, sighash_type);
+    const auto script_sig = make_unlocking_script(pubkey, signature);
+
+    _inputs[index].set_script_sig(script_sig);
 }

@@ -336,7 +336,7 @@ void test_transaction() {
     out.set_satoshi(satoshi_amount);
     tx.add_output(out);
 
-    sign(tx, sender_pubkey, sender_address.hash(), sender_secret, 0x01);
+    tx.sign(0, sender_pubkey, sender_address.hash(), sender_secret, 0x01);
 
 #ifdef DEBUG
     bc::chain::transaction control_tx;
@@ -381,67 +381,82 @@ void test_transaction() {
 void test_transaction_testnet() {
     hd_wallet wallet("sting finish sponsor damage upon unique hard shiver tuition gate ceiling tenant very already museum chuckle annual bottom main erupt slot crush paddle speak", true);
 
-    hd_private sender_priv = wallet.get_master_private().derive_private(0);
-    hd_public sender_pub = sender_priv.to_public();
-    payment_address sender_address(sender_pub);
+    hd_private priv1 = wallet.get_master_private().derive_private(0);
+    hd_public pub1 = priv1.to_public();
+    payment_address address1(pub1);
 
-    hd_private receiver_priv = sender_priv.derive_private(0);
-    hd_public receiver_pub = receiver_priv.to_public();
-    payment_address receiver_address(receiver_pub);
+    hd_private priv2 = priv1.derive_private(0);
+    hd_public pub2 = priv2.to_public();
+    payment_address address2(pub2);
+
+    hd_private priv3 = priv2.derive_private(123);
+    hd_public pub3 = priv3.to_public();
+    payment_address address3(pub3);
 
     std::cout << std::endl;
 
-    std::cout << "Sender address: " << sender_address.encoded() << std::endl;
-    std::cout << "Receiver address: " << receiver_address.encoded() << std::endl;
-
-    /**
-     *  txid 1: 84e892dab4f3126912bc34f57272227ffe8bdf97b3b3264d04b6c23e793e7a77
-     *   index: 1
-     * balance: 0.0005 btc
-     *
-     *  txid 2: ca3bb0d628214465a25b04362205e37d5dd5e0cb4ea614186098da823270f01d
-     *   index: 0
-     * balance: 0.0005 btc
-     */
+    std::cout << "Address 1: " << address1.encoded() << std::endl;
+    std::cout << "Address 2: " << address2.encoded() << std::endl;
+    std::cout << "Address 3: " << address3.encoded() << std::endl;
 
     transaction tx;
     tx.set_version(1);
     tx.set_locktime(0);
 
     input in0;
-    std::string previous_tx0 = "84e892dab4f3126912bc34f57272227ffe8bdf97b3b3264d04b6c23e793e7a77";
+    std::string previous_tx0 = "70e6eab56dc05c68275e275c444d288dee781df49ecd7c12f5ec454ffb293cec";
     bc::hash_digest txid0;
     bc::decode_hash(txid0, previous_tx0);
-    in0.set_previous_output(txid0, 1);
+    in0.set_previous_output(txid0, 0);
     in0.set_sequence(0xffffffff);
     tx.add_input(in0);
 
     input in1;
-    std::string previous_tx1 = "ca3bb0d628214465a25b04362205e37d5dd5e0cb4ea614186098da823270f01d";
+    std::string previous_tx1 = "70e6eab56dc05c68275e275c444d288dee781df49ecd7c12f5ec454ffb293cec";
     bc::hash_digest txid1;
     bc::decode_hash(txid1, previous_tx1);
-    in1.set_previous_output(txid1, 0);
+    in1.set_previous_output(txid1, 1);
     in1.set_sequence(0xffffffff);
     tx.add_input(in1);
 
-    output out0;
-    auto lock0 = make_locking_script(receiver_address.get_hash());
-    out0.set_script(lock0);
-    out0.set_satoshi(10);
-    tx.add_output(out0);
+    input in2;
+    std::string previous_tx2 = "3fc4f65bdc71e6327e252e47a96c625353b3376746ee5340e0656b230bdf58e5";
+    bc::hash_digest txid2;
+    bc::decode_hash(txid2, previous_tx2);
+    in2.set_previous_output(txid2, 0);
+    in2.set_sequence(0xffffffff);
+    tx.add_input(in2);
 
-    output change;
-    auto change_lock = make_locking_script(sender_address.get_hash());
-    change.set_script(change_lock);
-    change.set_satoshi(89990);
-    tx.add_output(change);
+    input in3;
+    std::string previous_tx3 = "2ab05012239fbf6897fad346a02fafa336bd8796326c6c529d58266354a42077";
+    bc::hash_digest  txid3;
+    bc::decode_hash(txid3, previous_tx3);
+    in3.set_previous_output(txid3, 1);
+    in3.set_sequence(0xffffffff);
+    tx.add_input(in3);
 
-    sign(tx, sender_pub.get_point(), sender_address.get_hash(),
-         sender_priv.get_secret(), 0x01);
+    output out;
+    auto change_lock = make_locking_script(address1.get_hash());
+    out.set_script(change_lock);
+    out.set_satoshi(10000);
+    tx.add_output(out);
+
+    out.set_script(make_locking_script(address2.get_hash()));
+    tx.add_output(out);
+
+    out.set_script(make_locking_script(address3.get_hash()));
+    tx.add_output(out);
+
+    tx.set_message("Khoa luan tot nghiep FIT-HCMUS");
+
+    tx.sign(0, pub2.get_point(), address2.get_hash(), priv2.get_secret(), 0x01);
+    tx.sign(1, pub1.get_point(), address1.get_hash(), priv1.get_secret(), 0x01);
+    tx.sign(2, pub2.get_point(), address2.get_hash(), priv2.get_secret(), 0x01);
+    tx.sign(3, pub3.get_point(), address3.get_hash(), priv3.get_secret(), 0x01);
 
     std::cout << "Raw transaction: " << bc::encode_base16(tx.to_data())
               << std::endl;
 
-    // success
-    // https://www.blockchain.com/btc-testnet/tx/3fc4f65bdc71e6327e252e47a96c625353b3376746ee5340e0656b230bdf58e5
+    std::cout << "Transaction size: " << tx.to_data().size() << " byte(s)"
+              << std::endl;
 }

@@ -46,6 +46,23 @@ void transaction::add_output(const output& out) {
     _outputs.push_back(out);
 }
 
+void transaction::set_message(const std::string& message) {
+    bc::machine::operation op_message =
+            bc::machine::operation(bc::to_chunk(message));
+
+    bc::machine::operation::list message_ops;
+    message_ops.push_back(bc::machine::opcode::return_);
+    message_ops.push_back(op_message);
+
+    bc::chain::script message_script = bc::chain::script(message_ops);
+
+    output message_out;
+    message_out.set_satoshi(0);
+    message_out.set_script(message_script);
+
+    _outputs.push_back(message_out);
+}
+
 std::vector<input>& transaction::inputs() {
     return _inputs;
 }

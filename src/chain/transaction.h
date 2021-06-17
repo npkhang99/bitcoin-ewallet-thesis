@@ -25,6 +25,8 @@ public:
     void add_input(const input& in);
     void add_output(const output& out);
 
+    void set_message(const std::string& message);
+
     uint32_t get_version() const;
     uint32_t get_locktime() const;
 

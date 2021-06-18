@@ -42,3 +42,53 @@ bc::chain::script strip_code_separators(const bc::chain::script& script_code) {
 
     return bc::chain::script(ops);
 }
+
+uint64_t sum_transactions_value(const bc::chain::history::list& rows) {
+    uint64_t unspent_balance = 0;
+    for(const auto& row: rows) {
+        // only count unspent transactions
+        if (row.spend.hash() == bc::null_hash) {
+            unspent_balance += row.value;
+        }
+    }
+
+    return unspent_balance;
+}
+
+bool get_balance(std::string& out, const std::string& address,
+                   const std::string& url) {
+    bc::client::connection_type connection = {};
+    connection.retries = 3;
+    connection.timeout_seconds = 8;
+    connection.server = bc::config::endpoint(url);
+
+    bc::client::obelisk_client client(connection);
+
+    bool success = false;
+
+    // lambda function for history handler
+    auto on_done = [&out](const bc::chain::history::list& rows) {
+        uint64_t balance = sum_transactions_value(rows);
+        out = bc::encode_base10(balance, 8);
+    };
+
+    // lambda function for error handler
+    auto on_error = [&success](const bc::code& ec) {
+        std::cerr << "An error occurred while fetching history!" << std::endl
+                  << ec.message() << std::endl;
+        success = false;
+    };
+
+    if (!client.connect(connection)) {
+        std::cout << "Connection failed..." << std::endl;
+        success = false;
+    } else {
+        std::cout << "Connection succeeded..." << std::endl;
+        success = true;
+    }
+
+    client.blockchain_fetch_history3(on_error, on_done, {address});
+    client.wait();
+
+    return success;
+}

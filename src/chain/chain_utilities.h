@@ -2,8 +2,12 @@
 #define LIBBITCOIN_THESIS_CHAIN_UTILITIES_H
 
 #include <bitcoin/bitcoin.hpp>
+#include <bitcoin/client.hpp>
 
 #include "transaction.h"
+
+const std::string mainnet_tcp = "tcp://mainnet.libbitcoin.net:9091";
+const std::string testnet_tcp = "tcp://testnet.libbitcoin.net:19091";
 
 /**
  * Create p2pkh locking script (script pub key)
@@ -38,5 +42,14 @@ bc::hash_digest create_signature_hash(const transaction& tx,
  * @return the original script with separators stripped
  */
 bc::chain::script strip_code_separators(const bc::chain::script& script_code);
+
+/**
+ * Get balance of a given bitcoin address
+ * @param address the encoded address
+ * @param url the network url to connect
+ * @return true if success, otherwise false
+ */
+bool get_balance(std::string& out, const std::string& address,
+                 const std::string& url = mainnet_tcp);
 
 #endif //LIBBITCOIN_THESIS_CHAIN_UTILITIES_H

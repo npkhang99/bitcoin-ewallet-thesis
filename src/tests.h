@@ -27,4 +27,6 @@ void test_transaction();
 
 void test_transaction_testnet();
 
+void test_get_balance();
+
 #endif //LIBBITCOIN_THESIS_TESTS_H

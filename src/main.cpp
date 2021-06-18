@@ -7,5 +7,6 @@ int main() {
     test_bip32();
     test_transaction();
     test_transaction_testnet();
+    test_get_balance();
     return 0;
 }

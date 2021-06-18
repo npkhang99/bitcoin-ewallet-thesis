@@ -460,3 +460,19 @@ void test_transaction_testnet() {
     std::cout << "Transaction size: " << tx.to_data().size() << " byte(s)"
               << std::endl;
 }
+
+void test_get_balance() {
+    std::string address = "mfzUeGZCAyS9qugJosefyJ1xd8kmSZXz5C";
+
+    std::cout << "Balance of address " << address << " on testnet: " << std::endl;
+    std::string balance;
+    if (get_balance(balance, address, testnet_tcp)) {
+        std::cout << balance << std::endl;
+    }
+
+    address = "1Cdid9KFAaatwczBwBttQcwXYCpvK8h7FK";
+    std::cout << "Balance of address " << address << " on mainnet: " << std::endl;
+    if (get_balance(balance, address)) {
+        std::cout << balance << std::endl;
+    }
+}

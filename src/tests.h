@@ -29,4 +29,6 @@ void test_transaction_testnet();
 
 void test_get_balance();
 
+void test_get_fee();
+
 #endif //LIBBITCOIN_THESIS_TESTS_H

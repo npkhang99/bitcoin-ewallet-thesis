@@ -476,3 +476,8 @@ void test_get_balance() {
         std::cout << balance << std::endl;
     }
 }
+
+void test_get_fee() {
+    uint64_t fee = get_recommended_fee();
+    std::cout << "Fastest fee: " << fee << " satoshi / byte" << std::endl;
+}

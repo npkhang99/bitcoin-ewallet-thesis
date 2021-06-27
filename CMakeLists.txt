@@ -9,6 +9,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(BITCOIN REQUIRED libbitcoin)
 pkg_check_modules(BITCOIN_CLIENT REQUIRED libbitcoin-client)
+pkg_check_modules(CURL REQUIRED libcurl)
+pkg_check_modules(JSON REQUIRED jsoncpp)
 
 add_executable(
         libbitcoin-thesis
@@ -27,7 +29,7 @@ add_executable(
         src/chain/output.cpp src/chain/output.h
         src/chain/chain_utilities.cpp src/chain/chain_utilities.h)
 
-target_link_libraries(libbitcoin-thesis ${BITCOIN_LIBRARIES} ${BITCOIN_CLIENT_LIBRARIES})
+target_link_libraries(libbitcoin-thesis ${BITCOIN_LIBRARIES} ${BITCOIN_CLIENT_LIBRARIES} ${CURL_LIBRARIES} ${JSON_LIBRARIES})
 target_link_directories(libbitcoin-thesis PUBLIC ${BITCOIN_LIBRARY_DIRS} ${BITCOIN_CLIENT_LIBRARY_DIRS})
 target_include_directories(libbitcoin-thesis PUBLIC ${BITCOIN_INCLUDE_DIRS} ${BITCOIN_CLIENT_INCLUDE_DIRS})
 target_compile_options(libbitcoin-thesis PUBLIC ${BITCOIN_CFLAGS_OTHER} ${BITCOIN_CLIENT_CFLAGS_OTHER})

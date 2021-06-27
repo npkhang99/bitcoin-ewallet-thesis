@@ -92,3 +92,37 @@ bool get_balance(std::string& out, const std::string& address,
 
     return success;
 }
+
+static size_t call_back(char* data, size_t size, size_t nmemb, void* userp) {
+    ((std::string*) userp)->append(data);
+    return size * nmemb;
+}
+
+uint64_t get_recommended_fee() {
+    CURL* curl_handle = curl_easy_init();
+    CURLcode code;
+    std::string response;
+
+    if (curl_handle) {
+        curl_easy_setopt(curl_handle, CURLOPT_URL, "https://bitcoinfees.earn.com/api/v1/fees/recommended");
+        curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, call_back);
+        curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &response);
+        code = curl_easy_perform(curl_handle);
+        if (code != CURLE_OK) {
+            std::cerr << "curl_easy_perform() failed: "
+                      << curl_easy_strerror(code) << std::endl;
+        }
+        curl_easy_cleanup(curl_handle);
+    }
+
+    if (response.empty()) {
+        return 0;
+    }
+
+    std::stringstream ss(response);
+
+    Json::Value fees;
+    ss >> fees;
+
+    return fees.get("fastestFee", 0).asUInt64();
+}

@@ -56,6 +56,10 @@ bc::chain::script strip_code_separators(const bc::chain::script& script_code);
 bool get_balance(std::string& out, const std::string& address,
                  const std::string& url = mainnet_tcp);
 
+/**
+ * Get fee for fastest transaction confirmation
+ * @return fee per transaction byte in satoshi
+ */
 uint64_t get_recommended_fee();
 
 #endif //LIBBITCOIN_THESIS_CHAIN_UTILITIES_H

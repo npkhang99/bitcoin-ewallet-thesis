@@ -26,6 +26,9 @@ public:
     void add_output(const output& out);
 
     void set_message(const std::string& message);
+    void set_fee(uint64_t fee);
+
+    void add_change_output(const payment_address& address);
 
     uint32_t get_version() const;
     uint32_t get_locktime() const;
@@ -43,6 +46,8 @@ private:
     std::vector<input> _inputs;
     std::vector<output> _outputs;
 
+    uint64_t _fee;
+
     void prepare_inputs(std::vector<input>& inputs, uint32_t index,
                         const bc::chain::script& original_script_code);
 
@@ -50,6 +55,8 @@ private:
     bc::data_chunk sign(const transaction& tx, const bc::chain::script& script_code,
                         const bc::byte_array<bc::ec_secret_size>& secret,
                         uint8_t sighash_type);
+
+    uint64_t get_spend_satoshi(const std::string& chain);
 };
 
 

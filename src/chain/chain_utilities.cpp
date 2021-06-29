@@ -45,7 +45,7 @@ bc::chain::script strip_code_separators(const bc::chain::script& script_code) {
 
 uint64_t sum_transactions_value(const bc::chain::history::list& rows) {
     uint64_t unspent_balance = 0;
-    for(const auto& row: rows) {
+    for (const auto& row : rows) {
         // only count unspent transactions
         if (row.spend.hash() == bc::null_hash) {
             unspent_balance += row.value;
@@ -56,7 +56,7 @@ uint64_t sum_transactions_value(const bc::chain::history::list& rows) {
 }
 
 bool get_balance(std::string& out, const std::string& address,
-                   const std::string& url) {
+                 const std::string& url) {
     bc::client::connection_type connection = {};
     connection.retries = 3;
     connection.timeout_seconds = 8;

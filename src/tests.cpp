@@ -436,10 +436,6 @@ void test_transaction_testnet() {
     tx.add_input(in3);
 
     output out;
-    auto change_lock = make_locking_script(address1.get_hash());
-    out.set_script(change_lock);
-    out.set_satoshi(10000);
-    tx.add_output(out);
 
     out.set_script(make_locking_script(address2.get_hash()));
     tx.add_output(out);
@@ -448,6 +444,9 @@ void test_transaction_testnet() {
     tx.add_output(out);
 
     tx.set_message("Khoa luan tot nghiep FIT-HCMUS");
+
+    tx.set_fee(get_recommended_fee());
+    tx.add_change_output(address1);
 
     tx.sign(0, pub2.get_point(), address2.get_hash(), priv2.get_secret(), 0x01);
     tx.sign(1, pub1.get_point(), address1.get_hash(), priv1.get_secret(), 0x01);

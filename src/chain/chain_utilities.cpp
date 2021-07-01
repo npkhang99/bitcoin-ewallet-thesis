@@ -56,71 +56,32 @@ uint64_t sum_transactions_value(const bc::chain::history::list& rows) {
 }
 
 bool get_balance(std::string& out, const std::string& address,
-                 const std::string& url) {
-    bc::client::connection_type connection = {};
-    connection.retries = 3;
-    connection.timeout_seconds = 8;
-    connection.server = bc::config::endpoint(url);
+                 const std::string& network) {
+    std::string uri =
+            "https://chain.so/api/v2/address/" + network + "/" + address;
 
-    bc::client::obelisk_client client(connection);
+    std::stringstream ss(http_client(uri).execute());
+    Json::Value response;
+    ss >> response;
 
-    bool success = false;
-
-    // lambda function for history handler
-    auto on_done = [&out](const bc::chain::history::list& rows) {
-        uint64_t balance = sum_transactions_value(rows);
-        out = bc::encode_base10(balance, 8);
-    };
-
-    // lambda function for error handler
-    auto on_error = [&success](const bc::code& ec) {
-        std::cerr << "An error occurred while fetching history!" << std::endl
-                  << ec.message() << std::endl;
-        success = false;
-    };
-
-    if (!client.connect(connection)) {
-        std::cout << "Connection failed..." << std::endl;
-        success = false;
-    } else {
-        std::cout << "Connection succeeded..." << std::endl;
-        success = true;
+    if (response["status"] != "success") {
+        return false;
     }
 
-    client.blockchain_fetch_history3(on_error, on_done, {address});
-    client.wait();
+    out = response["data"]["balance"].asString();
 
-    return success;
-}
-
-static size_t call_back(char* data, size_t size, size_t nmemb, void* userp) {
-    ((std::string*) userp)->append(data);
-    return size * nmemb;
+    return true;
 }
 
 uint64_t get_recommended_fee() {
-    CURL* curl_handle = curl_easy_init();
-    CURLcode code;
-    std::string response;
-
-    if (curl_handle) {
-        curl_easy_setopt(curl_handle, CURLOPT_URL, "https://bitcoinfees.earn.com/api/v1/fees/recommended");
-        curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, call_back);
-        curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &response);
-        code = curl_easy_perform(curl_handle);
-        if (code != CURLE_OK) {
-            std::cerr << "curl_easy_perform() failed: "
-                      << curl_easy_strerror(code) << std::endl;
-        }
-        curl_easy_cleanup(curl_handle);
-    }
+    http_client client("https://bitcoinfees.earn.com/api/v1/fees/recommended");
+    std::string response = client.execute();
 
     if (response.empty()) {
         return 0;
     }
 
     std::stringstream ss(response);
-
     Json::Value fees;
     ss >> fees;
 

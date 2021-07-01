@@ -463,16 +463,16 @@ void test_transaction_testnet() {
 void test_get_balance() {
     std::string address = "mfzUeGZCAyS9qugJosefyJ1xd8kmSZXz5C";
 
-    std::cout << "Balance of address " << address << " on testnet: " << std::endl;
+    std::cout << "Balance of address " << address << " on testnet: ";
     std::string balance;
-    if (get_balance(balance, address, testnet_tcp)) {
-        std::cout << balance << std::endl;
+    if (get_balance(balance, address, testnet)) {
+        std::cout << balance << " BTC" << std::endl;
     }
 
     address = "1Cdid9KFAaatwczBwBttQcwXYCpvK8h7FK";
-    std::cout << "Balance of address " << address << " on mainnet: " << std::endl;
+    std::cout << "Balance of address " << address << " on mainnet: ";
     if (get_balance(balance, address)) {
-        std::cout << balance << std::endl;
+        std::cout << balance << " BTC" << std::endl;
     }
 }
 

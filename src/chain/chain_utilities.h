@@ -9,9 +9,10 @@
 #include <sstream>
 
 #include "transaction.h"
+#include "../client/http_client.h"
 
-const std::string mainnet_tcp = "tcp://mainnet.libbitcoin.net:9091";
-const std::string testnet_tcp = "tcp://testnet.libbitcoin.net:19091";
+const std::string mainnet = "BTC";
+const std::string testnet = "BTCTEST";
 
 /**
  * Create p2pkh locking script (script pub key)
@@ -54,7 +55,7 @@ bc::chain::script strip_code_separators(const bc::chain::script& script_code);
  * @return true if success, otherwise false
  */
 bool get_balance(std::string& out, const std::string& address,
-                 const std::string& url = mainnet_tcp);
+                 const std::string& network = mainnet);
 
 /**
  * Get fee for fastest transaction confirmation

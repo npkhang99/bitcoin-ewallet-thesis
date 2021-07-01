@@ -29,7 +29,7 @@ add_executable(
         src/chain/output.cpp src/chain/output.h
         src/chain/chain_utilities.cpp src/chain/chain_utilities.h
 
-        src/client/http_client.cpp src/client/http_client.h)
+        src/client/http_client.cpp src/client/http_client.h src/client/client_utilities.cpp src/client/client_utilities.h)
 
 target_link_libraries(libbitcoin-thesis ${BITCOIN_LIBRARIES} ${BITCOIN_CLIENT_LIBRARIES} ${CURL_LIBRARIES} ${JSON_LIBRARIES})
 target_link_directories(libbitcoin-thesis PUBLIC ${BITCOIN_LIBRARY_DIRS} ${BITCOIN_CLIENT_LIBRARY_DIRS})

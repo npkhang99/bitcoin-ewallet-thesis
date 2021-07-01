@@ -13,6 +13,8 @@
 #include "chain/transaction.h"
 #include "chain/chain_utilities.h"
 
+#include "client/client_utilities.h"
+
 #include "utilities.h"
 
 void test_address();

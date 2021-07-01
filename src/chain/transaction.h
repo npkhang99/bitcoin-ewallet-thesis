@@ -5,6 +5,7 @@
 #include <bitcoin/bitcoin.hpp>
 
 #include "../wallet/payment_address.h"
+#include "../client/client_utilities.h"
 
 #include "input.h"
 #include "output.h"
@@ -28,6 +29,8 @@ public:
     void set_message(const std::string& message);
     void set_fee(uint64_t fee);
 
+    void set_network(const std::string& network);
+
     void add_change_output(const payment_address& address);
 
     uint32_t get_version() const;
@@ -35,7 +38,8 @@ public:
 
     bc::data_chunk to_data() const;
 
-    void sign(uint32_t index, const bc::byte_array<bc::ec_compressed_size>& pubkey,
+    void sign(uint32_t index,
+              const bc::byte_array<bc::ec_compressed_size>& pubkey,
               const bc::short_hash& pubkey_hash,
               const bc::byte_array<bc::ec_secret_size>& secret,
               uint8_t sighash_type);
@@ -47,16 +51,18 @@ private:
     std::vector<output> _outputs;
 
     uint64_t _fee;
+    std::string _network = "mainnet";
 
     void prepare_inputs(std::vector<input>& inputs, uint32_t index,
                         const bc::chain::script& original_script_code);
 
     // sign and return DER encoded EC signature
-    bc::data_chunk sign(const transaction& tx, const bc::chain::script& script_code,
+    bc::data_chunk sign(const transaction& tx,
+                        const bc::chain::script& script_code,
                         const bc::byte_array<bc::ec_secret_size>& secret,
                         uint8_t sighash_type);
 
-    uint64_t get_spend_satoshi(const std::string& chain);
+    uint64_t get_spend_satoshi();
 };
 
 

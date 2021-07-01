@@ -43,36 +43,6 @@ bc::chain::script strip_code_separators(const bc::chain::script& script_code) {
     return bc::chain::script(ops);
 }
 
-uint64_t sum_transactions_value(const bc::chain::history::list& rows) {
-    uint64_t unspent_balance = 0;
-    for (const auto& row : rows) {
-        // only count unspent transactions
-        if (row.spend.hash() == bc::null_hash) {
-            unspent_balance += row.value;
-        }
-    }
-
-    return unspent_balance;
-}
-
-bool get_balance(std::string& out, const std::string& address,
-                 const std::string& network) {
-    std::string uri =
-            "https://chain.so/api/v2/address/" + network + "/" + address;
-
-    std::stringstream ss(http_client(uri).execute());
-    Json::Value response;
-    ss >> response;
-
-    if (response["status"] != "success") {
-        return false;
-    }
-
-    out = response["data"]["balance"].asString();
-
-    return true;
-}
-
 uint64_t get_recommended_fee() {
     http_client client("https://bitcoinfees.earn.com/api/v1/fees/recommended");
     std::string response = client.execute();

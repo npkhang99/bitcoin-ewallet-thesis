@@ -4,15 +4,11 @@
 #include <bitcoin/bitcoin.hpp>
 #include <bitcoin/client.hpp>
 
-#include <curl/curl.h>
 #include <json/json.h>
 #include <sstream>
 
 #include "transaction.h"
 #include "../client/http_client.h"
-
-const std::string mainnet = "BTC";
-const std::string testnet = "BTCTEST";
 
 /**
  * Create p2pkh locking script (script pub key)
@@ -47,15 +43,6 @@ bc::hash_digest create_signature_hash(const transaction& tx,
  * @return the original script with separators stripped
  */
 bc::chain::script strip_code_separators(const bc::chain::script& script_code);
-
-/**
- * Get balance of a given bitcoin address
- * @param address the encoded address
- * @param url the network url to connect
- * @return true if success, otherwise false
- */
-bool get_balance(std::string& out, const std::string& address,
-                 const std::string& network = mainnet);
 
 /**
  * Get fee for fastest transaction confirmation

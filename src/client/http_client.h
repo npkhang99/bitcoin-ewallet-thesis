@@ -2,10 +2,12 @@
 #define LIBBITCOIN_THESIS_HTTP_CLIENT_H
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <curl/curl.h>
 
+/// Basic HTTP client
 class http_client {
 public:
     http_client();

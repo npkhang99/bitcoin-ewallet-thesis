@@ -67,20 +67,21 @@ void transaction::set_fee(uint64_t fee) {
     _fee = fee;
 }
 
+void transaction::set_network(const std::string& network) {
+    _network = network;
+}
+
 void transaction::add_change_output(const payment_address& address) {
     if (_fee == 0) {
         _fee = get_recommended_fee();
     }
 
-    uint64_t total_spend = get_spend_satoshi("testnet");
-    std::cerr << total_spend << std::endl;
+    uint64_t total_spend = get_spend_satoshi();
 
     uint64_t total_used = 0;
     for (const output& out : _outputs) {
         total_used += out.get_satoshi();
     }
-
-    std::cerr << total_used << std::endl;
 
     output change;
     change.set_satoshi(0);
@@ -147,7 +148,8 @@ bc::data_chunk transaction::sign(const transaction& tx,
     return der;
 }
 
-void transaction::sign(uint32_t index, const bc::byte_array<bc::ec_compressed_size>& pubkey,
+void transaction::sign(uint32_t index,
+                       const bc::byte_array<bc::ec_compressed_size>& pubkey,
                        const bc::short_hash& pubkey_hash,
                        const bc::byte_array<bc::ec_secret_size>& secret,
                        uint8_t sighash_type) {
@@ -165,47 +167,22 @@ void transaction::sign(uint32_t index, const bc::byte_array<bc::ec_compressed_si
     _inputs[index].set_script_sig(script_sig);
 }
 
-uint64_t transaction::get_spend_satoshi(const std::string& chain) {
-    std::string url = (chain == "mainnet") ?
-            "tcp://mainnet.libbitcoin.net:9091" :
-            "tcp://testnet.libbitcoin.net:19091";
-    bc::client::connection_type connection = {};
-    connection.retries = 3;
-    connection.timeout_seconds = 8;
-    connection.server = bc::config::endpoint(url);
-
-    bc::client::obelisk_client client(connection);
-
-    bool success = false;
-    uint32_t output_index = 0;
-    uint64_t total_spend = 0;
-
-    // lambda function for history handler
-    auto on_done = [output_index, &total_spend](const bc::chain::transaction& tx) {
-        total_spend += tx.outputs()[output_index].value();
-    };
-
-    // lambda function for error handler
-    auto on_error = [&success](const bc::code& ec) {
-        std::cerr << "An error occurred while fetching transaction!" << std::endl
-                  << ec.message() << std::endl;
-        success = false;
-    };
-
-    if (!client.connect(connection)) {
-        std::cout << "Connection failed..." << std::endl;
-        success = false;
-    } else {
-        std::cout << "Connection succeeded..." << std::endl;
-        success = true;
-    }
+uint64_t transaction::get_spend_satoshi() {
+    uint64_t total_spent = 0;
 
     for (const input& in : _inputs) {
-        output_index = in.get_previous_output().index();
-        client.blockchain_fetch_transaction2(on_error, on_done,
-                                             in.get_previous_output().hash());
-        client.wait();
+        std::string tx_hash = bc::encode_hash(in.get_previous_output().hash());
+        uint32_t index = in.get_previous_output().index();
+
+        Json::Value tx_info;
+        client::get_tx_info(tx_info, tx_hash, _network == "testnet" ?
+                                client::testnet : client::mainnet);
+
+        uint64_t value;
+        bc::decode_base10(value, tx_info["outputs"][index]["value"].asString(), 8);
+
+        total_spent += value;
     }
 
-    return total_spend;
+    return total_spent;
 }

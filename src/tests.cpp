@@ -402,6 +402,7 @@ void test_transaction_testnet() {
     transaction tx;
     tx.set_version(1);
     tx.set_locktime(0);
+    tx.set_network("testnet");
 
     input in0;
     std::string previous_tx0 = "70e6eab56dc05c68275e275c444d288dee781df49ecd7c12f5ec454ffb293cec";
@@ -436,6 +437,7 @@ void test_transaction_testnet() {
     tx.add_input(in3);
 
     output out;
+    out.set_satoshi(10000);
 
     out.set_script(make_locking_script(address2.get_hash()));
     tx.add_output(out);
@@ -465,13 +467,13 @@ void test_get_balance() {
 
     std::cout << "Balance of address " << address << " on testnet: ";
     std::string balance;
-    if (get_balance(balance, address, testnet)) {
+    if (client::get_balance(balance, address, client::testnet)) {
         std::cout << balance << " BTC" << std::endl;
     }
 
     address = "1Cdid9KFAaatwczBwBttQcwXYCpvK8h7FK";
     std::cout << "Balance of address " << address << " on mainnet: ";
-    if (get_balance(balance, address)) {
+    if (client::get_balance(balance, address)) {
         std::cout << balance << " BTC" << std::endl;
     }
 }

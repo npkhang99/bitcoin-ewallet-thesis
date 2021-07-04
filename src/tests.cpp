@@ -1,5 +1,6 @@
 #include "tests.h"
 
+#ifdef DEBUG
 void test_address() {
     bc::ec_secret secret_ec = generate_secret(
             "067375cf2f49e9bc7b759acdcc6b9cd43326a550415eff5ba8d5e266d7adfca3");
@@ -482,3 +483,5 @@ void test_get_fee() {
     uint64_t fee = get_recommended_fee();
     std::cout << "Fastest fee: " << fee << " satoshi / byte" << std::endl;
 }
+
+#endif

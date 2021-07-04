@@ -4,7 +4,7 @@
 #include <string>
 #include <bitcoin/bitcoin.hpp>
 
-#include "../utilities.h"
+#include "wallet_utilities.h"
 #include "hd_lineage.h"
 
 class hd_private;

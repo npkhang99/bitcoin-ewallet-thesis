@@ -1,6 +1,8 @@
 #ifndef LIBBITCOIN_THESIS_TESTS_H
 #define LIBBITCOIN_THESIS_TESTS_H
 
+#ifdef DEBUG
+
 #include <iostream>
 #include <string>
 #include <bitcoin/bitcoin.hpp>
@@ -15,7 +17,7 @@
 
 #include "client/client_utilities.h"
 
-#include "utilities.h"
+#include "wallet/wallet_utilities.h"
 
 void test_address();
 
@@ -32,5 +34,7 @@ void test_transaction_testnet();
 void test_get_balance();
 
 void test_get_fee();
+
+#endif
 
 #endif //LIBBITCOIN_THESIS_TESTS_H

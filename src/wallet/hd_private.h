@@ -6,7 +6,7 @@
 
 #include "hd_lineage.h"
 #include "hd_public.h"
-#include "../utilities.h"
+#include "wallet_utilities.h"
 
 /**
  * BIP32 HD wallet private key

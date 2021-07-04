@@ -156,3 +156,21 @@ payment_address hd_wallet::get_new_payment_address() {
     hd_private base_priv = derive_private(_base_derive_path);
     return payment_address(base_priv.derive_private(_next_child_key_index++));
 }
+
+std::string hd_wallet::get_balance() {
+    hd_private base_priv = derive_private(_base_derive_path);
+    uint64_t total_balance = 0;
+
+    for (uint32_t index = 0; index < _next_child_key_index; index++) {
+        payment_address address(base_priv.derive_private(index));
+        std::string balance_btc;
+        client::get_balance(balance_btc, address.encoded(),
+                            _testnet ? client::testnet : client::mainnet);
+
+        uint64_t balance;
+        bc::decode_base10(balance, balance_btc, 8);
+        total_balance += balance;
+    }
+
+    return std::string();
+}

@@ -61,6 +61,8 @@ bool init_wallet(const std::string& mnemonic = "",
         wallet->set_passphrase(passphrase);
     }
 
+    wallet->explore();
+
     return true;
 }
 

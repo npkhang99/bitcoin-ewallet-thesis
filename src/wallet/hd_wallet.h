@@ -52,8 +52,9 @@ public:
 
     payment_address get_new_payment_address();
 
-#ifdef DEBUG
+    std::string get_balance();
 
+#ifdef DEBUG
     /**
      * Dumps wallet data for debugging purposes
      */
@@ -86,7 +87,6 @@ public:
     hd_public get_master_public() const {
         return _master_public;
     }
-
 #endif
 
 private:

@@ -5,8 +5,11 @@
 #include <string>
 #include <bitcoin/bitcoin.hpp>
 
+#include "../client/client_utilities.h"
+
 #include "hd_public.h"
 #include "hd_private.h"
+#include "payment_address.h"
 
 /**
  * HD Wallet implementation
@@ -26,19 +29,28 @@ public:
      */
     void set_passphrase(const std::string& passphrase);
 
+    void set_base_derive_path(const std::vector<uint32_t>& base_derive_path);
+
     /**
      * BIP-32 HD Wallet private key derivation
      * @param path key derivation path
      * @return wallet::hd_private children private key
      */
-    hd_private derive_private(const std::vector<int>& path);
+    hd_private derive_private(const std::vector<uint32_t>& path);
 
     /**
      * BIP-32 HD Wallet public key derivation
      * @param path key derivation path
      * @return wallet::hd_public children public key
      */
-    hd_public derive_public(const std::vector<int>& path);
+    hd_public derive_public(const std::vector<uint32_t>& path);
+
+    /**
+     * Explore the HD wallet for used keys
+     */
+    void explore();
+
+    payment_address get_new_payment_address();
 
 #ifdef DEBUG
 
@@ -86,6 +98,11 @@ private:
     hd_private _master_private;
     hd_public _master_public;
     std::string _passphrase;
+
+    std::vector<uint32_t> _base_derive_path;
+    uint32_t _first_unused = 0;
+
+    uint32_t _next_child_key_index = 0;
 
     const std::size_t DEFAULT_ENTROPY_BITS = 256;
     const std::string PASSPHRASE_PREFIX = "mnemonic";

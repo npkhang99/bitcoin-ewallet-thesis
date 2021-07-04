@@ -32,17 +32,17 @@ hd_wallet::hd_wallet(const bc::wallet::word_list& mnemonic, bool testnet) {
     generate_master_keys();
 }
 
-hd_private hd_wallet::derive_private(const std::vector<int>& path) {
+hd_private hd_wallet::derive_private(const std::vector<uint32_t>& path) {
     hd_private child_key = _master_private;
-    for (int index : path) {
+    for (uint32_t index : path) {
         child_key = child_key.derive_private(index);
     }
     return child_key;
 }
 
-hd_public hd_wallet::derive_public(const std::vector<int>& path) {
+hd_public hd_wallet::derive_public(const std::vector<uint32_t>& path) {
     hd_public child_key = _master_public;
-    for (int index : path) {
+    for (uint32_t index : path) {
         child_key = child_key.derive_public(index);
     }
     return child_key;
@@ -55,7 +55,7 @@ void hd_wallet::set_passphrase(const std::string& passphrase) {
 
 std::string to_binary(uint8_t num) {
     std::string binary;
-    for (int i = 7; i >= 0; i--) {
+    for (uint8_t i = 7; i >= 0; i--) {
         binary.push_back(num >> i & 1 ? '1' : '0');
     }
     return binary;
@@ -122,4 +122,37 @@ void hd_wallet::generate_master_keys() {
     std::cout << "Wallet successfully created" << std::endl;
     std::cout << "Your mnemonic is:" << std::endl;
     std::cout << bc::join(_mnemonic) << std::endl;
+}
+
+void hd_wallet::set_base_derive_path(const std::vector<uint32_t>& base_derive_path) {
+    _base_derive_path = base_derive_path;
+}
+
+void hd_wallet::explore() {
+    hd_private base_priv = derive_private(_base_derive_path);
+
+    uint32_t index;
+    uint32_t consecutive_unused_count = 0;
+
+    for (index = 0; consecutive_unused_count < 20; index++) {
+        payment_address address(base_priv.derive_private(index));
+
+        Json::Value info;
+        client::get_address_info(info, address.encoded(),
+                                 _testnet ? client::testnet : client::mainnet);
+
+        if (info["total_txs"].asUInt() == 0) {
+            consecutive_unused_count++;
+        } else {
+            _first_unused += consecutive_unused_count + 1;
+            consecutive_unused_count = 0;
+        }
+    }
+
+    _next_child_key_index = _first_unused;
+}
+
+payment_address hd_wallet::get_new_payment_address() {
+    hd_private base_priv = derive_private(_base_derive_path);
+    return payment_address(base_priv.derive_private(_next_child_key_index++));
 }

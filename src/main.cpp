@@ -87,6 +87,8 @@ int main(int argv, const char* args[]) {
         std::cout << "> ";
         std::cin >> command;
 
+        std::cout << command << std::endl;
+
         switch (get_command(command, wallet)) {
             case commands::NEW_WALLET:
                 init_wallet();

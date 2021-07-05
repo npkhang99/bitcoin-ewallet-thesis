@@ -52,6 +52,10 @@ public:
 
     payment_address get_new_payment_address();
 
+    /**
+     * Get balance of all address in wallet
+     * @return balance in BTC
+     */
     std::string get_balance();
 
 #ifdef DEBUG

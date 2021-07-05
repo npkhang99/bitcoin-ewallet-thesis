@@ -28,6 +28,7 @@ enum commands {
     GET_BALANCE,
     LIST_TRANSACTIONS,
     NEW_TRANSACTION,
+    NEW_ADDRESS
 };
 
 const std::map<std::string, commands> support_commands = {
@@ -37,14 +38,22 @@ const std::map<std::string, commands> support_commands = {
         {"loadwallet", LOAD_WALLET},
         {"getbalance", GET_BALANCE},
         {"listtransactions", LIST_TRANSACTIONS},
-        {"newtransaction", NEW_TRANSACTION}
+        {"newtransaction", NEW_TRANSACTION},
+        {"newaddress", NEW_ADDRESS}
 };
 
-const std::map<std::string, uint8_t> transaction_commands = {
-        {"help", 0},
-        {"done", 1},
-        {"exit", 2},
-        {"addoutput", 3},
+enum tcommands {
+    T_HELP,
+    T_DONE,
+    T_EXIT,
+    T_ADD_OUTPUT
+};
+
+const std::map<std::string, tcommands> support_tcommands = {
+        {"help", T_HELP},
+        {"done", T_DONE},
+        {"exit", T_EXIT},
+        {"addoutput", T_ADD_OUTPUT},
 };
 
 #endif //LIBBITCOIN_THESIS_DATA_H

@@ -16,9 +16,11 @@ add_executable(
         libbitcoin-thesis
 
         src/main.cpp
-        src/data.h
         src/tests.cpp src/tests.h
-        src/utilities.cpp src/utilities.h
+
+        src/interactive/data.h
+        src/interactive/utilities.cpp src/interactive/utilities.h
+        src/interactive/interactive_shell.cpp src/interactive/interactive_shell.h
 
         src/wallet/wallet_utilities.cpp src/wallet/wallet_utilities.h
         src/wallet/hd_wallet.cpp src/wallet/hd_wallet.h

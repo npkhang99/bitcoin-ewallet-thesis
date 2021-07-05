@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "wallet/hd_wallet.h"
+#include "../wallet/hd_wallet.h"
 
 #include "data.h"
 

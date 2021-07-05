@@ -51,7 +51,7 @@ bool client::get_address_info(Json::Value& out, const std::string& address,
         return false;
     }
 
-    out = response["data"].asString();
+    out = response["data"];
 
     return true;
 }

@@ -28,10 +28,21 @@ void run_tests() {
 }
 #endif
 
-bool init_wallet(const std::string& mnemonic = "",
+bool init_wallet(const std::vector<std::string>& mnemonic = {},
                  const std::string& passphrase = "") {
+    if (wallet != nullptr) {
+        delete wallet;
+        wallet = nullptr;
+    }
+
     if (mnemonic.empty()) {
-        wallet = new hd_wallet();
+        wallet = new hd_wallet(testnet);
+        std::cout << "Passphrase (optional): ";
+
+        std::string p;
+        std::getline(std::cin, p);
+
+        wallet->set_passphrase(p);
         return true;
     }
 
@@ -49,9 +60,39 @@ bool init_wallet(const std::string& mnemonic = "",
         wallet->set_passphrase(passphrase);
     }
 
+    std::cout << "Exploring wallet... ";
+    std::cout.flush();
+
     wallet->explore();
 
+    std::cout << "success" << std::endl;
+
     return true;
+}
+
+void load_wallet() {
+    std::vector<std::string> mnemonic;
+    std::string line;
+    std::getline(std::cin, line);
+    std::stringstream ss(line);
+
+    std::string token;
+    while (ss >> token) {
+        mnemonic.emplace_back(token);
+    }
+
+    cin_clear_line();
+    std::cout << "Passphrase (if your wallet have one): ";
+    std::string passphrase;
+    std::getline(std::cin, passphrase);
+
+    if (!init_wallet(mnemonic, passphrase)) {
+        std::cerr << "wallet initialization failed" << std::endl;
+    } else {
+        std::cout << "Wallet initialized successfully" << std::endl;
+        std::cout << "Your wallet balance:" << std::endl;
+        wallet->get_balance();
+    }
 }
 
 int main(int argv, const char* args[]) {
@@ -83,18 +124,8 @@ int main(int argv, const char* args[]) {
             case commands::NEW_WALLET:
                 init_wallet();
                 break;
-            case commands::LOAD_WALLET: {
-                std::string mnemonic;
-                std::cin.ignore();
-                std::getline(std::cin, mnemonic);
-
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
-                                '\n');
-                std::cout << "Passphrase (if your wallet have one): ";
-                std::string passphrase;
-                std::getline(std::cin, passphrase);
-
-                init_wallet(mnemonic, passphrase);
+            case commands::LOAD_WALLET:
+                load_wallet();
                 break;
             }
             case commands::EXIT:

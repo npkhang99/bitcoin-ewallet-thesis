@@ -1,5 +1,7 @@
 #include "chain_utilities.h"
 
+#include "transaction.h"
+
 bc::chain::script make_locking_script(const bc::short_hash& pubkey_hash) {
     bc::machine::operation::list p2kh;
     p2kh.push_back(bc::machine::operation(bc::machine::opcode::dup));
@@ -43,7 +45,7 @@ bc::chain::script strip_code_separators(const bc::chain::script& script_code) {
     return bc::chain::script(ops);
 }
 
-uint64_t get_recommended_fee() {
+uint64_t get_fastest_fee() {
     http_client client("https://bitcoinfees.earn.com/api/v1/fees/recommended");
     std::string response = client.execute();
 

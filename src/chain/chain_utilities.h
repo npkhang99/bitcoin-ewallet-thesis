@@ -7,8 +7,9 @@
 #include <json/json.h>
 #include <sstream>
 
-#include "transaction.h"
 #include "../client/http_client.h"
+
+class transaction;
 
 /**
  * Create p2pkh locking script (script pub key)
@@ -48,6 +49,6 @@ bc::chain::script strip_code_separators(const bc::chain::script& script_code);
  * Get fee for fastest transaction confirmation
  * @return fee per transaction byte in satoshi
  */
-uint64_t get_recommended_fee();
+uint64_t get_fastest_fee();
 
 #endif //LIBBITCOIN_THESIS_CHAIN_UTILITIES_H

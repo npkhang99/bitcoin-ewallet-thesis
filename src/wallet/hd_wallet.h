@@ -103,7 +103,7 @@ private:
     hd_public _master_public;
     std::string _passphrase;
 
-    std::vector<uint32_t> _base_derive_path;
+    std::vector<uint32_t> _base_derive_path = {hd_private::first_hardened_key, 0};
     uint32_t _first_unused = 0;
 
     uint32_t _next_child_key_index = 0;

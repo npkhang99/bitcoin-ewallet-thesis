@@ -39,9 +39,18 @@ namespace client {
      * @param network mainnet or testnet
      * @return true if success, otherwise false
      */
-    bool get_address_info(Json::Value& out,
-                          const std::string& address,
+    bool get_address_info(Json::Value& out, const std::string& address,
                           const std::string& network = mainnet);
+
+    /**
+     * Get unspent transactions from an address
+     * @param out output json
+     * @param address the encoded address
+     * @param network mainnet or testnet
+     * @return true if success, otherwise false
+     */
+    bool get_unspent_txs(Json::Value& out, const std::string& address,
+                         const std::string& network = mainnet);
 }
 
 #endif //LIBBITCOIN_THESIS_CLIENT_UTILITIES_H

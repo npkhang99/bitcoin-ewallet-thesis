@@ -187,3 +187,37 @@ std::string hd_wallet::get_balance() {
 
     return bc::encode_base10(available, 8);
 }
+
+std::vector<payment_address> hd_wallet::get_used_payment_addresses() {
+    hd_private base_priv = derive_private(_base_derive_path);
+    std::vector<payment_address> used;
+    for (uint32_t index = 0; index < _first_unused; index++) {
+        used.emplace_back(base_priv.derive_private(index));
+    }
+    return used;
+}
+
+std::vector<trans_info> hd_wallet::get_unspent_txs() {
+    hd_private base_priv = derive_private(_base_derive_path);
+    std::vector<trans_info> transactions;
+
+    for (uint32_t index = 0; index < _first_unused; index++) {
+        payment_address address(base_priv.derive_private(index));
+        Json::Value unspents;
+        client::get_unspent_txs(unspents, address.encoded(),
+                                _testnet ? client::testnet : client::mainnet);
+
+        for (const auto& tx : unspents["txs"]) {
+            bc::hash_digest tx_hash;
+            bc::decode_hash(tx_hash, tx["txid"].asString());
+            bc::chain::output_point op(tx_hash, tx["output_no"].asInt64());
+
+            uint64_t value;
+            bc::decode_base10(value, tx["value"].asString(), 8);
+
+            transactions.push_back({base_priv.derive_private(index), op, value});
+        }
+    }
+
+    return transactions;
+}

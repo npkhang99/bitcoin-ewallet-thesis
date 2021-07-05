@@ -28,6 +28,7 @@ add_executable(
         src/wallet/hd_public.cpp src/wallet/hd_public.h
         src/wallet/hd_lineage.h
         src/wallet/payment_address.cpp src/wallet/payment_address.h
+        src/wallet/trans_info.h
 
         src/chain/transaction.cpp src/chain/transaction.h
         src/chain/input.cpp src/chain/input.h

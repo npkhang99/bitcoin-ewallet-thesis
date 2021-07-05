@@ -10,6 +10,7 @@
 #include "hd_public.h"
 #include "hd_private.h"
 #include "payment_address.h"
+#include "trans_info.h"
 
 /**
  * HD Wallet implementation
@@ -50,6 +51,10 @@ public:
      */
     void explore();
 
+    /**
+     * Get a new unused Bitcoin payment address
+     * @return unused payment address
+     */
     payment_address get_new_payment_address();
 
     /**
@@ -57,6 +62,18 @@ public:
      * @return balance in BTC
      */
     std::string get_balance();
+
+    /**
+     * Get all used payment addresses
+     * @return used payment addresses
+     */
+    std::vector<payment_address> get_used_payment_addresses();
+
+    /**
+     * Get all transactions have been made with this wallet addresses
+     * @return a vector of transaction info
+     */
+    std::vector<trans_info> get_unspent_txs();
 
 #ifdef DEBUG
     /**

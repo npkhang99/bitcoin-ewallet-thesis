@@ -5,11 +5,13 @@
 #include <vector>
 #include <string>
 
-#include "../wallet/hd_wallet.h"
-
 #include "data.h"
 #include "utilities.h"
+#include "transaction_builder.h"
 
+class hd_wallet;
+
+/// An interactive shell to run program
 class interactive_shell {
 public:
     interactive_shell();

@@ -21,6 +21,7 @@ add_executable(
         src/interactive/data.h
         src/interactive/utilities.cpp src/interactive/utilities.h
         src/interactive/interactive_shell.cpp src/interactive/interactive_shell.h
+        src/interactive/transaction_builder.cpp src/interactive/transaction_builder.h
 
         src/wallet/wallet_utilities.cpp src/wallet/wallet_utilities.h
         src/wallet/hd_wallet.cpp src/wallet/hd_wallet.h

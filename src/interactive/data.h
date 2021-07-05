@@ -42,18 +42,4 @@ const std::map<std::string, commands> support_commands = {
         {"newaddress", NEW_ADDRESS}
 };
 
-enum tcommands {
-    T_HELP,
-    T_DONE,
-    T_EXIT,
-    T_ADD_OUTPUT
-};
-
-const std::map<std::string, tcommands> support_tcommands = {
-        {"help", T_HELP},
-        {"done", T_DONE},
-        {"exit", T_EXIT},
-        {"addoutput", T_ADD_OUTPUT},
-};
-
 #endif //LIBBITCOIN_THESIS_DATA_H

@@ -1,5 +1,7 @@
 #include "interactive_shell.h"
 
+#include "../wallet/hd_wallet.h"
+
 interactive_shell::interactive_shell() {
     wallet = nullptr;
     testnet = false;
@@ -25,6 +27,7 @@ int interactive_shell::run(int argc, const char* argv[]) {
     while (APP_LOOP) {
         std::string command;
         std::cout << "> ";
+        std::cout.flush();
         std::cin >> command;
 
         std::cout << command << std::endl;
@@ -46,9 +49,20 @@ int interactive_shell::run(int argc, const char* argv[]) {
                           << std::endl;
                 break;
             case commands::LIST_TRANSACTIONS:
-            case commands::NEW_TRANSACTION:
                 throw std::runtime_error("Un-implemented error");
+            case commands::NEW_TRANSACTION: {
+                transaction_builder tbuilder(wallet, testnet);
+                transaction tx;
+                if (tbuilder.build(tx)) {
+                    std::cout << "Your raw transaction: "
+                              << bc::encode_base16(tx.to_data()) << std::endl;
+                } else {
+                    std::cout << "Transaction building canceled" << std::endl;
+                }
+                break;
+            }
             case commands::EXIT:
+                cin_clear_line();
                 APP_LOOP = false;
                 break;
             case commands::HELP:
@@ -119,7 +133,6 @@ void interactive_shell::load_wallet() {
         mnemonic.emplace_back(token);
     }
 
-    cin_clear_line();
     std::cout << "Passphrase (if your wallet have one): ";
     std::string passphrase;
     std::getline(std::cin, passphrase);

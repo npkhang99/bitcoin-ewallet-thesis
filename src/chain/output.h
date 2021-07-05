@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <bitcoin/bitcoin.hpp>
 
+#include "../wallet/payment_address.h"
 #include "chain_utilities.h"
 
 class output {

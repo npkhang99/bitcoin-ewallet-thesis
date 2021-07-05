@@ -55,7 +55,7 @@ void hd_wallet::set_passphrase(const std::string& passphrase) {
 
 std::string to_binary(uint8_t num) {
     std::string binary;
-    for (uint8_t i = 7; i >= 0; i--) {
+    for (int8_t i = 7; i >= 0; i--) {
         binary.push_back(num >> i & 1 ? '1' : '0');
     }
     return binary;

@@ -6,6 +6,9 @@ const uint32_t hd_private::testnet = 70615956;
 hd_private::hd_private() {
 }
 
+hd_private::hd_private(const hd_private& o)
+        : hd_private(o._secret, o._lineage, o._chain_code) {}
+
 hd_private::hd_private(const bc::data_chunk& seed, uint32_t version) {
     // BIP32 magic key for HMAC-SHA512
     const auto magic = bc::to_chunk("Bitcoin seed");

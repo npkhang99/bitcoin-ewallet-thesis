@@ -19,6 +19,7 @@ public:
     static const uint32_t first_hardened_key = 1 << 31;
 
     hd_private();
+    hd_private(const hd_private& o);
     hd_private(const bc::data_chunk& seed, uint32_t version = mainnet);
 
     std::string encoded() const;

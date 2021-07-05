@@ -20,6 +20,7 @@ bool need_wallet(commands cmd) {
 
 commands get_command(const std::string& arg, const hd_wallet* wallet) {
     if (support_commands.find(arg) == support_commands.end()) {
+        std::cout << "Unknown command" << std::endl;
         return commands::HELP;
     }
 

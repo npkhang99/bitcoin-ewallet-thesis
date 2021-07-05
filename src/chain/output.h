@@ -4,10 +4,12 @@
 #include <cstdint>
 #include <bitcoin/bitcoin.hpp>
 
+#include "chain_utilities.h"
+
 class output {
 public:
     output();
-
+    output(const payment_address& address, uint64_t satoshi);
     output(uint64_t satoshi, const bc::chain::script& script);
 
     uint64_t get_satoshi() const;

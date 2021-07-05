@@ -2,6 +2,9 @@
 
 output::output() : _satoshi(0) {}
 
+output::output(const payment_address& address, uint64_t satoshi)
+        : _satoshi(satoshi), _script(make_locking_script(address.get_hash())) {}
+
 output::output(uint64_t satoshi, const bc::chain::script& script)
         : _satoshi(satoshi), _script(script) {}
 

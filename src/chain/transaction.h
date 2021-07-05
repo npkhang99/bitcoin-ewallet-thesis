@@ -31,6 +31,9 @@ public:
 
     void set_network(const std::string& network);
 
+    uint64_t get_total_fund() const;
+    uint64_t get_total_spends() const;
+
     void add_change_output(const payment_address& address);
 
     uint32_t get_version() const;
@@ -61,8 +64,6 @@ private:
                         const bc::chain::script& script_code,
                         const bc::byte_array<bc::ec_secret_size>& secret,
                         uint8_t sighash_type);
-
-    uint64_t get_spend_satoshi();
 };
 
 

@@ -76,7 +76,7 @@ void transaction::add_change_output(const payment_address& address) {
         _fee = get_recommended_fee();
     }
 
-    uint64_t total_spend = get_spend_satoshi();
+    uint64_t total_spend = get_total_fund();
 
     uint64_t total_used = 0;
     for (const output& out : _outputs) {
@@ -167,8 +167,8 @@ void transaction::sign(uint32_t index,
     _inputs[index].set_script_sig(script_sig);
 }
 
-uint64_t transaction::get_spend_satoshi() {
-    uint64_t total_spent = 0;
+uint64_t transaction::get_total_fund() const {
+    uint64_t total_fund = 0;
 
     for (const input& in : _inputs) {
         std::string tx_hash = bc::encode_hash(in.get_previous_output().hash());
@@ -181,8 +181,18 @@ uint64_t transaction::get_spend_satoshi() {
         uint64_t value;
         bc::decode_base10(value, tx_info["outputs"][index]["value"].asString(), 8);
 
-        total_spent += value;
+        total_fund += value;
     }
 
-    return total_spent;
+    return total_fund;
+}
+
+uint64_t transaction::get_total_spends() const {
+    uint64_t total_spend = 0;
+
+    for (const output& out : _outputs) {
+        total_spend += out.get_satoshi();
+    }
+
+    return total_spend;
 }

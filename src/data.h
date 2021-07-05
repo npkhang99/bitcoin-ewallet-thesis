@@ -4,6 +4,22 @@
 #include <map>
 #include <string>
 
+const static char* usage = "usage: %s [chain]\nOptions:\n"
+                           "  chain: 'mainnet' (default) or 'testnet'";
+
+const static char* interactive_usage = "Interactive shell usage:\n"
+                                       "  <command> [args...]";
+
+const static char* help[] = {
+        "exit: exit the program",
+        "help: print this usage message",
+        "newwallet: create a new HD wallet",
+        "loadwallet <mnemonic>: initialize a new HD wallet from <mnemonic>",
+        "getbalance: get current wallet balance",
+        "newaddress: get new Bitcoin payment address",
+        "listtransactions: list all transactions made using this wallet"
+};
+
 enum commands {
     EXIT,
     HELP,

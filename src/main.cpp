@@ -10,18 +10,6 @@
 #include "tests.h"
 #endif
 
-const char* usage = "usage: %s [chain]\nOptions:\n"
-                    "  chain: 'mainnet' (default) or 'testnet'";
-
-const char* help[] = {
-        "exit: exit the program",
-        "help: print this usage message",
-        "newwallet: create a new HD wallet",
-        "loadwallet <mnemonic>: initialize a new HD wallet from <mnemonic>",
-        "getbalance: get current wallet balance",
-        "listtransactions: list all transactions made using this wallet"
-};
-
 bool APP_LOOP = true;
 
 hd_wallet* wallet = nullptr;
@@ -114,12 +102,8 @@ int main(int argv, const char* args[]) {
                 break;
             case commands::HELP:
             default:
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
-                                '\n');
-                std::cout << "Support commands:" << std::endl;
-                for (const auto& i : help) {
-                    std::cout << i << std::endl;
-                }
+                cin_clear_line();
+                print_help();
         }
     }
 

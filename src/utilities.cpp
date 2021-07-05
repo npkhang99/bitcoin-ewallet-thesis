@@ -31,3 +31,15 @@ commands get_command(const std::string& arg, const hd_wallet* wallet) {
 
     return support_commands.find(arg)->second;
 }
+
+void cin_clear_line() {
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+void print_help() {
+    std::cout << interactive_usage << std::endl;
+    std::cout << "Support commands:" << std::endl;
+    for (const auto& e : help) {
+        std::cout << "  " << e << std::endl;
+    }
+}

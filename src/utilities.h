@@ -1,6 +1,7 @@
 #ifndef LIBBITCOIN_THESIS_UTILITIES_H
 #define LIBBITCOIN_THESIS_UTILITIES_H
 
+#include <iostream>
 #include <string>
 
 #include "wallet/hd_wallet.h"
@@ -10,5 +11,9 @@
 std::string format(const char* fmt, ...);
 
 commands get_command(const std::string& arg, const hd_wallet* wallet);
+
+void cin_clear_line();
+
+void print_help();
 
 #endif //LIBBITCOIN_THESIS_UTILITIES_H

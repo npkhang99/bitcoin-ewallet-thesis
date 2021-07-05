@@ -73,7 +73,7 @@ void transaction::set_network(const std::string& network) {
 
 void transaction::add_change_output(const payment_address& address) {
     if (_fee == 0) {
-        _fee = get_recommended_fee();
+        throw std::runtime_error("fee should not be 0");
     }
 
     uint64_t total_spend = get_total_fund();
@@ -89,10 +89,19 @@ void transaction::add_change_output(const payment_address& address) {
     _outputs.push_back(change);
 
     uint64_t bytes = to_data().size();
-    change.set_satoshi(total_spend - total_used - _fee * bytes);
+
+    if (total_spend - total_used < _fee * bytes) {
+        throw std::runtime_error("fee is too large");
+    }
+
+    uint64_t change_satoshi = total_spend - total_used - _fee * bytes;
+    change.set_satoshi(change_satoshi);
 
     _outputs.pop_back();
-    _outputs.push_back(change);
+
+    if (change_satoshi != 0) {
+        _outputs.push_back(change);
+    }
 }
 
 template <class T>
@@ -195,4 +204,8 @@ uint64_t transaction::get_total_spends() const {
     }
 
     return total_spend;
+}
+
+uint64_t transaction::get_max_fee() const {
+    return (get_total_fund() - get_total_spends()) / to_data().size();
 }

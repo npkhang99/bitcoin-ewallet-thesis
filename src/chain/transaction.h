@@ -47,6 +47,8 @@ public:
               const bc::byte_array<bc::ec_secret_size>& secret,
               uint8_t sighash_type);
 
+    uint64_t get_max_fee() const;
+
 private:
     uint32_t _version;
     uint32_t _locktime;

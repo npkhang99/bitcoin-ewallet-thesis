@@ -127,7 +127,18 @@ int main(int argv, const char* args[]) {
             case commands::LOAD_WALLET:
                 load_wallet();
                 break;
-            }
+            case commands::GET_BALANCE:
+                std::cout << "Your wallet balance:" << std::endl;
+                wallet->get_balance();
+                break;
+            case commands::NEW_ADDRESS:
+                std::cout << "Your payment address: "
+                          << wallet->get_new_payment_address().encoded()
+                          << std::endl;
+                break;
+            case commands::LIST_TRANSACTIONS:
+            case commands::NEW_TRANSACTION:
+                throw std::runtime_error("Un-implemented error");
             case commands::EXIT:
                 APP_LOOP = false;
                 break;

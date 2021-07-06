@@ -46,8 +46,10 @@ int interactive_shell::run(int argc, const char* argv[]) {
                           << wallet->get_new_payment_address().encoded()
                           << std::endl;
                 break;
-            case commands::LIST_TRANSACTIONS:
-                throw std::runtime_error("Un-implemented error");
+            case commands::HISTORY:
+                std::cout << "Your transaction history:" << std::endl;
+                list_transaction_hist();
+                break;
             case commands::NEW_TRANSACTION: {
                 transaction_builder tbuilder(wallet, testnet);
                 transaction tx;
@@ -141,5 +143,28 @@ void interactive_shell::load_wallet() {
         std::cout << "Wallet initialized successfully" << std::endl;
         std::cout << "Your wallet balance:" << std::endl;
         wallet->get_balance();
+    }
+}
+
+void interactive_shell::list_transaction_hist() {
+    for (const auto& address : wallet->get_used_payment_addresses()) {
+        Json::Value info;
+        client::get_address_info(info, address.encoded(),
+                                 testnet ? client::testnet : client::mainnet);
+
+        std::cout << "Address " << address.encoded() << ":" << std::endl;
+        for (const auto& tx : info["txs"]) {
+            std::cout << "  TXID: " << tx["txid"].asString() << std::endl;
+            std::cout << "    Block: " << tx["block_no"].asString() << std::endl;
+            std::cout << "    Confirmations: " << tx["confirmations"].asString()
+                      << std::endl;
+            std::cout << "    Value: " << tx["incoming"]["value"].asString()
+                      << " BTC" << std::endl;
+            std::cout << "    Spent: " << tx["incoming"]["spent"].asString()
+                      << std::endl;
+            time_t trans_time = tx["time"].asInt64();
+            std::cout << "    Time: " <<  asctime(localtime(&trans_time))
+                      << std::endl;
+        }
     }
 }

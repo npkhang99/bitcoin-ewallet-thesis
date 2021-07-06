@@ -17,7 +17,7 @@ const static char* help[] = {
         "loadwallet <mnemonic>: initialize a new HD wallet from <mnemonic>",
         "getbalance: get current wallet balance",
         "newaddress: get new Bitcoin payment address",
-        "listtransactions: list all transactions made using this wallet"
+        "history: list all transactions history of this wallet"
 };
 
 enum commands {
@@ -26,20 +26,20 @@ enum commands {
     NEW_WALLET,
     LOAD_WALLET,
     GET_BALANCE,
-    LIST_TRANSACTIONS,
+    HISTORY,
     NEW_TRANSACTION,
     NEW_ADDRESS
 };
 
 const std::map<std::string, commands> support_commands = {
-        {"exit", EXIT},
-        {"help", HELP},
-        {"newwallet", NEW_WALLET},
-        {"loadwallet", LOAD_WALLET},
-        {"getbalance", GET_BALANCE},
-        {"listtransactions", LIST_TRANSACTIONS},
+        {"exit",           EXIT},
+        {"help",           HELP},
+        {"newwallet",      NEW_WALLET},
+        {"loadwallet",     LOAD_WALLET},
+        {"getbalance",     GET_BALANCE},
+        {"history",        HISTORY},
         {"newtransaction", NEW_TRANSACTION},
-        {"newaddress", NEW_ADDRESS}
+        {"newaddress",     NEW_ADDRESS}
 };
 
 #endif //LIBBITCOIN_THESIS_DATA_H

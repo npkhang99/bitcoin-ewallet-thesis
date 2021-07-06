@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <ctime>
 
 #include "data.h"
 #include "utilities.h"
@@ -27,6 +28,8 @@ private:
     bool testnet;
     hd_wallet* wallet;
     bool APP_LOOP;
+
+    void list_transaction_hist();
 };
 
 

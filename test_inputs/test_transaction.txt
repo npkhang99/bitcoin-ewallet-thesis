@@ -1,6 +1,14 @@
-help
 loadwallet action iron wealth silent toddler grab mammal tuition time coconut antenna runway busy region weapon soon leopard rough lake sand jump expose payment shove
 
-
-newaddress
+newtransaction
+help
+addinput
+1
+addinput
+2
+addoutput
+mmpx1rzE7Y6DF1ovBMRLTZ4BQ6WkXXyECZ
+0.000001
+done
+2
 exit

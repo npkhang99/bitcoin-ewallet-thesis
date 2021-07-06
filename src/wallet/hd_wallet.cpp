@@ -152,9 +152,15 @@ void hd_wallet::explore() {
     _next_child_key_index = _first_unused;
 }
 
-payment_address hd_wallet::get_new_payment_address() {
+payment_address hd_wallet::get_new_payment_address(bool increase) {
     hd_private base_priv = derive_private(_base_derive_path);
-    return payment_address(base_priv.derive_private(_next_child_key_index++));
+    payment_address address(base_priv.derive_private(_next_child_key_index));
+
+    if (increase) {
+        _next_child_key_index++;
+    }
+
+    return address;
 }
 
 std::string hd_wallet::get_balance() {

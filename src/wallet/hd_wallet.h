@@ -53,9 +53,10 @@ public:
 
     /**
      * Get a new unused Bitcoin payment address
+     * @param increase should increase child index or not
      * @return unused payment address
      */
-    payment_address get_new_payment_address();
+    payment_address get_new_payment_address(bool increase = true);
 
     /**
      * Get balance of all address in wallet

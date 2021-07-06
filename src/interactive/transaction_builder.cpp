@@ -174,7 +174,13 @@ void transaction_builder::add_output() {
         return;
     }
 
-    // TODO: check for insufficient fund
+    uint64_t fund = temp.get_total_fund();
+    uint64_t used = temp.get_total_spends();
+
+    if (fund - used < satoshi) {
+        std::cerr << "insufficient fund" << std::endl;
+        return;
+    }
 
     temp.add_output({address, satoshi});
 }

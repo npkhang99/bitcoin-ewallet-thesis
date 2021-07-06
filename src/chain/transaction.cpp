@@ -205,7 +205,3 @@ uint64_t transaction::get_total_spends() const {
 
     return total_spend;
 }
-
-uint64_t transaction::get_max_fee() const {
-    return (get_total_fund() - get_total_spends()) / to_data().size();
-}

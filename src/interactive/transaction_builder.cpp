@@ -13,6 +13,7 @@ transaction_builder::transaction_builder(hd_wallet* wallet, bool testnet) {
 bool verify_fee(uint64_t& fee, const std::string& fee_str) {
     for (char c : fee_str) {
         if (!std::isdigit(c)) {
+            std::cerr << "invalid fee" << std::endl;
             return false;
         }
     }
@@ -20,7 +21,7 @@ bool verify_fee(uint64_t& fee, const std::string& fee_str) {
     try {
         fee = std::stoull(fee_str);
     } catch (std::exception& e) {
-        std::cerr << "  invalid fee: " << e.what() << std::endl;
+        std::cerr << "invalid fee: " << e.what() << std::endl;
         return false;
     }
 
@@ -131,7 +132,7 @@ bool valid(const std::string& str, uint32_t size) {
     std::string size_str = std::to_string(size);
 
     return str.length() < size_str.length() ||
-           (str.length() == size_str.length() && str < size_str);
+           (str.length() == size_str.length() && str <= size_str);
 }
 
 void transaction_builder::add_input() {

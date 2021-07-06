@@ -448,7 +448,7 @@ void test_transaction_testnet() {
 
     tx.set_message("Khoa luan tot nghiep FIT-HCMUS");
 
-    tx.set_fee(get_recommended_fee());
+    tx.set_fee(get_fastest_fee());
     tx.add_change_output(address1);
 
     tx.sign(0, pub2.get_point(), address2.get_hash(), priv2.get_secret(), 0x01);
@@ -480,7 +480,7 @@ void test_get_balance() {
 }
 
 void test_get_fee() {
-    uint64_t fee = get_recommended_fee();
+    uint64_t fee = get_fastest_fee();
     std::cout << "Fastest fee: " << fee << " satoshi / byte" << std::endl;
 }
 

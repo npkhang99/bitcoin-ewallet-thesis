@@ -1,7 +1,5 @@
 #include "interactive_shell.h"
 
-#include "../wallet/hd_wallet.h"
-
 interactive_shell::interactive_shell() {
     wallet = nullptr;
     testnet = false;

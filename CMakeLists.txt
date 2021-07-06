@@ -19,6 +19,7 @@ add_executable(
         src/tests.cpp src/tests.h
 
         src/interactive/data.h
+        src/interactive/tdata.h
         src/interactive/utilities.cpp src/interactive/utilities.h
         src/interactive/interactive_shell.cpp src/interactive/interactive_shell.h
         src/interactive/transaction_builder.cpp src/interactive/transaction_builder.h

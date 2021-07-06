@@ -9,7 +9,7 @@
 #include "utilities.h"
 #include "transaction_builder.h"
 
-class hd_wallet;
+#include "../wallet/hd_wallet.h"
 
 /// An interactive shell to run program
 class interactive_shell {

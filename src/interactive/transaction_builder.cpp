@@ -25,6 +25,11 @@ bool verify_fee(uint64_t& fee, const std::string& fee_str) {
         return false;
     }
 
+    if (fee == 0) {
+        std::cerr << "invalid fee: fee must be greater than 0" << std::endl;
+        return false;
+    }
+
     return true;
 }
 
@@ -50,43 +55,12 @@ bool transaction_builder::build(transaction& tx) {
             case tcommands::T_DONE: {
                 TRANSACTION_LOOP = false;
 
-                if (temp.get_total_fund() < temp.get_total_spends()) {
-                    std::cerr << format("  insufficient fund (have = %llu, "
-                                        "spend = %llu)", temp.get_total_fund(),
-                                        temp.get_total_spends()) << std::endl;
+                uint64_t tx_fee;
+                if (!get_fee(tx_fee)) {
                     break;
                 }
 
-                uint64_t max_fee = temp.get_max_fee();
-                if (!max_fee) {
-                    std::cerr << format("  fee is 0");
-                    break;
-                }
-
-                std::cout << "  Fastest fee is " << get_fastest_fee()
-                          << std::endl << "  Your maximum fee is "
-                          << max_fee << std::endl;
-
-                std::cout << "  Please enter fee ";
-                std::string fee_str;
-                std::cin >> fee_str;
-
-                uint64_t fee;
-                if (!verify_fee(fee, fee_str)) {
-                    std::cerr << "  invalid fee" << std::endl;
-                    break;
-                }
-
-                if (fee > max_fee) {
-                    std::cerr << format("  fee exceeds maximum fee (%llu)",
-                                        max_fee) << std::endl;
-                    break;
-                }
-
-                temp.set_fee(fee);
-                temp.add_change_output(wallet->get_new_payment_address().encoded());
-
-                sign_tx();
+                finalize_tx(tx_fee);
 
                 tx = temp;
                 done = true;
@@ -109,6 +83,10 @@ bool transaction_builder::build(transaction& tx) {
 void transaction_builder::print_thelp() {
     std::cout << "Support transaction building commands:" << std::endl;
     for (const auto& str : thelp) {
+        std::cout << "  " << str << std::endl;
+    }
+    std::cout << std::endl;
+    for (const auto& str : tnote) {
         std::cout << "  " << str << std::endl;
     }
 }
@@ -216,4 +194,92 @@ void transaction_builder::sign_tx() {
                   payment_address(private_key).get_hash(),
                   private_key.get_secret(), 0x01);
     }
+}
+
+uint64_t transaction_builder::calculate_max_fee() {
+    transaction tx = temp;
+
+    output change(wallet->get_new_payment_address(false), 0);
+    tx.add_output(change);
+
+    for (uint32_t i = 0; i < choosen_txs.size(); i++) {
+        hd_private private_key = unspents[i].priv;
+        tx.sign(i, private_key.to_public().get_point(),
+                payment_address(private_key).get_hash(),
+                private_key.get_secret(), 0x01);
+    }
+
+    uint32_t bytes = tx.to_data().size();
+    uint64_t diff = tx.get_total_fund() - tx.get_total_spends();
+
+    return diff / bytes;
+}
+
+bool transaction_builder::get_fee(uint64_t& fee) {
+    if (temp.get_total_fund() < temp.get_total_spends()) {
+        std::cerr << format("insufficient fund (in = %llu, out = %llu)",
+                            temp.get_total_fund(), temp.get_total_spends())
+                  << std::endl;
+        return false;
+    }
+
+    uint64_t max_fee = calculate_max_fee();
+    if (max_fee == 0) {
+        std::cerr << "left over fund is insufficient for fee" << std::endl;
+        return false;
+    }
+
+    std::cout << "  Fastest fee (per byte) is " << get_fastest_fee()
+              << std::endl << "  Your maximum fee (per byte) is " << max_fee
+              << std::endl;
+
+    std::cout << "  Please enter your transaction fee (per byte): ";
+    std::string fee_str;
+    std::cin >> fee_str;
+
+    uint64_t fee_per_byte;
+    if (!verify_fee(fee_per_byte, fee_str)) {
+        return false;
+    }
+
+    if (fee_per_byte > max_fee) {
+        std::cerr << format("fee exceeds maximum fee (%llu)",
+                            max_fee) << std::endl;
+        return false;
+    }
+
+    fee = calculate_tx_fee(fee_per_byte);
+
+    return true;
+}
+
+uint64_t transaction_builder::calculate_tx_fee(uint64_t fee_per_byte) {
+    transaction tx = temp;
+
+    output change(wallet->get_new_payment_address(false), 0);
+    tx.add_output(change);
+
+    for (uint32_t i = 0; i < choosen_txs.size(); i++) {
+        hd_private private_key = unspents[i].priv;
+        tx.sign(i, private_key.to_public().get_point(),
+                payment_address(private_key).get_hash(),
+                private_key.get_secret(), 0x01);
+    }
+
+    return fee_per_byte * tx.to_data().size();
+}
+
+void transaction_builder::finalize_tx(uint64_t tx_fee) {
+    std::cout << "  Your transaction fee is: " << tx_fee << " satoshis"
+              << std::endl;
+    std::cout << "  Making change output... ";
+    std::cout.flush();
+
+    uint64_t change = temp.get_total_fund() - temp.get_total_spends() - tx_fee;
+    temp.add_output({wallet->get_new_payment_address(), change});
+
+    std::cout << "done" << std::endl << "  Signing transaction... ";
+    std::cout.flush();
+    sign_tx();
+    std::cout << "done" << std::endl;
 }

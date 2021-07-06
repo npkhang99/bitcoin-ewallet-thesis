@@ -48,6 +48,11 @@ private:
     std::string get_total_avail_fund();
 
     void sign_tx();
+
+    bool get_fee(uint64_t& fee);
+    uint64_t calculate_max_fee();
+    uint64_t calculate_tx_fee(uint64_t fee_per_byte);
+    void finalize_tx(uint64_t fee_per_byte);
 };
 
 

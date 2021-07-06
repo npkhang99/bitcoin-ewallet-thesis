@@ -8,6 +8,9 @@ addinput
 2
 addoutput
 mmpx1rzE7Y6DF1ovBMRLTZ4BQ6WkXXyECZ
+1
+addoutput
+mmpx1rzE7Y6DF1ovBMRLTZ4BQ6WkXXyECZ
 0.000001
 done
 2

@@ -50,6 +50,7 @@ public:
      * Explore the HD wallet for used keys
      */
     void explore();
+    void refresh();
 
     /**
      * Get a new unused Bitcoin payment address
@@ -122,8 +123,8 @@ private:
     std::string _passphrase;
 
     std::vector<uint32_t> _base_derive_path = {hd_private::first_hardened_key, 0};
-    uint32_t _first_unused = 0;
 
+    uint32_t _first_unused = 0;
     uint32_t _next_child_key_index = 0;
 
     const std::size_t DEFAULT_ENTROPY_BITS = 256;
@@ -132,6 +133,8 @@ private:
     void generate_mnemonic();
 
     void generate_master_keys();
+
+    void explore(uint32_t begin);
 };
 
 

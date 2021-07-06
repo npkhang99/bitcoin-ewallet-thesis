@@ -129,12 +129,20 @@ void hd_wallet::set_base_derive_path(const std::vector<uint32_t>& base_derive_pa
 }
 
 void hd_wallet::explore() {
+    explore(0);
+}
+
+void hd_wallet::refresh() {
+    explore(_first_unused);
+}
+
+void hd_wallet::explore(uint32_t begin) {
     hd_private base_priv = derive_private(_base_derive_path);
 
     uint32_t index;
     uint32_t consecutive_unused_count = 0;
 
-    for (index = 0; consecutive_unused_count < 20; index++) {
+    for (index = begin; consecutive_unused_count < 20; index++) {
         payment_address address(base_priv.derive_private(index));
 
         Json::Value info;

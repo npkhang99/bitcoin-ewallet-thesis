@@ -13,7 +13,7 @@ transaction_builder::transaction_builder(hd_wallet* wallet, bool testnet) {
 bool verify_fee(uint64_t& fee, const std::string& fee_str) {
     for (char c : fee_str) {
         if (!std::isdigit(c)) {
-            std::cerr << "invalid fee" << std::endl;
+            std::cout << "invalid fee" << std::endl;
             return false;
         }
     }
@@ -21,12 +21,12 @@ bool verify_fee(uint64_t& fee, const std::string& fee_str) {
     try {
         fee = std::stoull(fee_str);
     } catch (std::exception& e) {
-        std::cerr << "invalid fee: " << e.what() << std::endl;
+        std::cout << "invalid fee: " << e.what() << std::endl;
         return false;
     }
 
     if (fee == 0) {
-        std::cerr << "invalid fee: fee must be greater than 0" << std::endl;
+        std::cout << "invalid fee: fee must be greater than 0" << std::endl;
         return false;
     }
 
@@ -57,6 +57,7 @@ bool transaction_builder::build(transaction& tx) {
 
                 uint64_t tx_fee;
                 if (!get_fee(tx_fee)) {
+                    TRANSACTION_LOOP = true;
                     break;
                 }
 
@@ -66,6 +67,12 @@ bool transaction_builder::build(transaction& tx) {
                 done = true;
                 break;
             }
+            case tcommands::T_REFRESH:
+                std::cout << "  Refreshing wallet... ";
+                std::cout.flush();
+                wallet->refresh();
+                std::cout << "done" << std::endl;
+                break;
             case tcommands::T_EXIT:
                 cin_clear_line();
                 TRANSACTION_LOOP = false;
@@ -160,7 +167,7 @@ void transaction_builder::add_output() {
     try {
         address = payment_address(encoded_address);
     } catch (std::invalid_argument& e) {
-        std::cerr << e.what() << std::endl;
+        std::cout << e.what() << std::endl;
         return;
     }
 
@@ -170,7 +177,7 @@ void transaction_builder::add_output() {
 
     uint64_t satoshi;
     if (!bc::decode_base10(satoshi, btc, 8)) {
-        std::cerr << "invalid fund" << std::endl;
+        std::cout << "invalid fund" << std::endl;
         return;
     }
 
@@ -178,7 +185,7 @@ void transaction_builder::add_output() {
     uint64_t used = temp.get_total_spends();
 
     if (fund - used < satoshi) {
-        std::cerr << "insufficient fund" << std::endl;
+        std::cout << "insufficient fund" << std::endl;
         return;
     }
 
@@ -223,7 +230,7 @@ uint64_t transaction_builder::calculate_max_fee() {
 
 bool transaction_builder::get_fee(uint64_t& fee) {
     if (temp.get_total_fund() < temp.get_total_spends()) {
-        std::cerr << format("insufficient fund (in = %llu, out = %llu)",
+        std::cout << format("insufficient fund (in = %llu, out = %llu)",
                             temp.get_total_fund(), temp.get_total_spends())
                   << std::endl;
         return false;
@@ -231,7 +238,7 @@ bool transaction_builder::get_fee(uint64_t& fee) {
 
     uint64_t max_fee = calculate_max_fee();
     if (max_fee == 0) {
-        std::cerr << "left over fund is insufficient for fee" << std::endl;
+        std::cout << "left over fund is insufficient for fee" << std::endl;
         return false;
     }
 
@@ -249,7 +256,7 @@ bool transaction_builder::get_fee(uint64_t& fee) {
     }
 
     if (fee_per_byte > max_fee) {
-        std::cerr << format("fee exceeds maximum fee (%llu)",
+        std::cout << format("fee exceeds maximum fee (%llu)",
                             max_fee) << std::endl;
         return false;
     }

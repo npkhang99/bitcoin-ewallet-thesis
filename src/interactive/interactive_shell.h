@@ -30,6 +30,7 @@ private:
     bool APP_LOOP;
 
     void list_transaction_hist();
+    void refresh_wallet();
 };
 
 

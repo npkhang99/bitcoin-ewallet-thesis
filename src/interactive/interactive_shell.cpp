@@ -47,6 +47,7 @@ int interactive_shell::run(int argc, const char* argv[]) {
                           << std::endl;
                 break;
             case commands::HISTORY:
+                wallet->refresh();
                 std::cout << "Your transaction history:" << std::endl;
                 list_transaction_hist();
                 break;
@@ -61,6 +62,12 @@ int interactive_shell::run(int argc, const char* argv[]) {
                 }
                 break;
             }
+            case commands::REFRESH:
+                std::cout << "Refreshing wallet... ";
+                std::cout.flush();
+                wallet->refresh();
+                std::cout << "done" << std::endl;
+                break;
             case commands::EXIT:
                 cin_clear_line();
                 APP_LOOP = false;
@@ -101,7 +108,7 @@ bool interactive_shell::init_wallet(const std::vector<std::string>& mnemonic,
     try {
         wallet = new hd_wallet(mnemonic, testnet);
     } catch (std::exception& e) {
-        std::cerr << "error while create new exception "
+        std::cout << "error while create new exception "
                   << e.what() << std::endl;
         delete wallet;
         wallet = nullptr;
@@ -138,7 +145,7 @@ void interactive_shell::load_wallet() {
     std::getline(std::cin, passphrase);
 
     if (!init_wallet(mnemonic, passphrase)) {
-        std::cerr << "wallet initialization failed" << std::endl;
+        std::cout << "wallet initialization failed" << std::endl;
     } else {
         std::cout << "Wallet initialized successfully" << std::endl;
         std::cout << "Your wallet balance:" << std::endl;

@@ -10,7 +10,8 @@ enum tcommands {
     T_EXIT,
     T_ADD_INPUT,
     T_ADD_OUTPUT,
-    T_REFRESH
+    T_REFRESH,
+    T_ADD_MESSAGE
 };
 
 const static char* tnote[] = {
@@ -23,8 +24,9 @@ const static char* thelp[] = {
         "exit: cancel transaction",
         "help: print this usage message",
         "done: confirm transaction",
-        "addinput: add an input",
-        "addoutput: add an output",
+        "addinput: add an input to transaction",
+        "addoutput: add an output to transaction",
+        "addmessage: add a note to transaction",
         "refresh: refresh wallet"
 };
 
@@ -34,7 +36,8 @@ const std::map<std::string, tcommands> support_tcommands = {
         {"exit",      T_EXIT},
         {"addinput",  T_ADD_INPUT},
         {"addoutput", T_ADD_OUTPUT},
-        {"refresh",   T_REFRESH}
+        {"refresh",   T_REFRESH},
+        {"addmessage", T_ADD_MESSAGE}
 };
 
 #endif //LIBBITCOIN_THESIS_TDATA_H

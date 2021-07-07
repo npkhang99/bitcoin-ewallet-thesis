@@ -44,6 +44,7 @@ private:
 
     void add_input();
     void add_output();
+    void add_message();
 
     std::string get_total_avail_fund();
 

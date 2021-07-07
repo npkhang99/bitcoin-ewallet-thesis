@@ -52,6 +52,9 @@ bool transaction_builder::build(transaction& tx) {
             case tcommands::T_ADD_OUTPUT:
                 add_output();
                 break;
+            case tcommands::T_ADD_MESSAGE:
+                add_message();
+                break;
             case tcommands::T_DONE: {
                 TRANSACTION_LOOP = false;
 
@@ -171,6 +174,19 @@ void transaction_builder::add_output() {
         return;
     }
 
+    std::string btc_left;
+
+    uint64_t fund;
+    bc::decode_base10(fund, get_total_avail_fund(), 8);
+    uint64_t spent = temp.get_total_spends();
+
+    uint64_t available = fund - spent;
+
+    std::string available_btc = bc::encode_base10(available, 8);
+
+    std::cout << "  Left over BTC to spend: " << available_btc << " BTC"
+              << std::endl;
+
     std::string btc;
     std::cout << "  Enter amount to send (in BTC): ";
     std::cin >> btc;
@@ -181,15 +197,20 @@ void transaction_builder::add_output() {
         return;
     }
 
-    uint64_t fund = temp.get_total_fund();
-    uint64_t used = temp.get_total_spends();
-
-    if (fund - used < satoshi) {
+    if (available < satoshi) {
         std::cout << "insufficient fund" << std::endl;
         return;
     }
 
     temp.add_output({address, satoshi});
+}
+
+void transaction_builder::add_message() {
+    std::cout << "  Enter your message: ";
+    cin_clear_line();
+    std::string message;
+    std::getline(std::cin, message);
+    temp.set_message(message);
 }
 
 std::string transaction_builder::get_total_avail_fund() {

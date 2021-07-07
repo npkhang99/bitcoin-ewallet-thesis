@@ -12,6 +12,8 @@ mmpx1rzE7Y6DF1ovBMRLTZ4BQ6WkXXyECZ
 addoutput
 mmpx1rzE7Y6DF1ovBMRLTZ4BQ6WkXXyECZ
 0.000001
+addmessage
+FIT-HCMUS
 done
 2
 exit

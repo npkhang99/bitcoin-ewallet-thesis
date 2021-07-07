@@ -21,7 +21,7 @@ void run_tests() {
 
 int main(int argc, const char* argv[]) {
 #ifdef DEBUG
-    if (argc == 2 && !std::strcmp(argv[2], "test")) {
+    if (argc == 2 && !std::strcmp(argv[1], "test")) {
         run_tests();
         return 0;
     }

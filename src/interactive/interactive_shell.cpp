@@ -28,10 +28,13 @@ int interactive_shell::run(int argc, const char* argv[]) {
         std::cout.flush();
         std::cin >> command;
 
+#ifdef DEBUG
         std::cout << command << std::endl;
+#endif
 
         switch (get_command(command, wallet)) {
             case commands::NEW_WALLET:
+                cin_clear_line();
                 init_wallet();
                 break;
             case commands::LOAD_WALLET:
@@ -87,44 +90,43 @@ int interactive_shell::run(int argc, const char* argv[]) {
     return 0;
 }
 
-bool interactive_shell::init_wallet(const std::vector<std::string>& mnemonic,
-                                    const std::string& passphrase) {
+bool interactive_shell::init_wallet(const std::vector<std::string>& mnemonic) {
     if (wallet != nullptr) {
         delete wallet;
         wallet = nullptr;
     }
 
+    std::cout << "Passphrase (leave empty if none): ";
+    std::string passphrase = "";
+    std::getline(std::cin, passphrase);
+
     if (mnemonic.empty()) {
         wallet = new hd_wallet(testnet);
-        std::cout << "Passphrase (optional): ";
-
-        std::string p;
-        std::getline(std::cin, p);
-
-        wallet->set_passphrase(p);
-        return true;
-    }
-
-    try {
-        wallet = new hd_wallet(mnemonic, testnet);
-    } catch (std::exception& e) {
-        std::cout << "error while create new exception "
-                  << e.what() << std::endl;
-        delete wallet;
-        wallet = nullptr;
-        return false;
+    } else {
+        try {
+            wallet = new hd_wallet(mnemonic, testnet);
+        } catch (std::exception& e) {
+            std::cout << "error while create new exception "
+                    << e.what() << std::endl;
+            delete wallet;
+            wallet = nullptr;
+            return false;
+        }
     }
 
     if (!passphrase.empty()) {
         wallet->set_passphrase(passphrase);
+        std::cout << "Passphrase applied" << std::endl;
     }
 
-    std::cout << "Exploring wallet... ";
-    std::cout.flush();
+    if (!mnemonic.empty()) {
+        std::cout << "Exploring wallet... ";
+        std::cout.flush();
 
-    wallet->explore();
+        wallet->explore();
 
-    std::cout << "success" << std::endl;
+        std::cout << "success" << std::endl;
+    }
 
     return true;
 }
@@ -140,11 +142,7 @@ void interactive_shell::load_wallet() {
         mnemonic.emplace_back(token);
     }
 
-    std::cout << "Passphrase (if your wallet have one): ";
-    std::string passphrase;
-    std::getline(std::cin, passphrase);
-
-    if (!init_wallet(mnemonic, passphrase)) {
+    if (!init_wallet(mnemonic)) {
         std::cout << "wallet initialization failed" << std::endl;
     } else {
         std::cout << "Wallet initialized successfully" << std::endl;

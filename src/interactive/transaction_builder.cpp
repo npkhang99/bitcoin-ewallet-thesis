@@ -43,7 +43,9 @@ bool transaction_builder::build(transaction& tx) {
         std::cout.flush();
         std::cin >> tcommand;
 
+#ifdef DEBUG
         std::cout << tcommand << std::endl;
+#endif
 
         switch (get_tcommand(tcommand)) {
             case tcommands::T_ADD_INPUT:

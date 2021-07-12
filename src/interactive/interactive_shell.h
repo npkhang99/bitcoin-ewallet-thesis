@@ -20,8 +20,7 @@ public:
     int run(int argc, const char* argv[]);
 
 private:
-    bool init_wallet(const std::vector<std::string>& mnemonic = {},
-                     const std::string& passphrase = "");
+    bool init_wallet(const std::vector<std::string>& mnemonic = {});
 
     void load_wallet();
 

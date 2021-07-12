@@ -1,11 +1,19 @@
 #include "hd_wallet.h"
 
+void hd_wallet::set_testnet(bool testnet) {
+    if (testnet) {
+        _testnet = testnet;
+        // testnet coin for BIP-0044 base derive path
+        _base_derive_path[1] = hd_private::first_hardened_key + 1;
+    }
+}
+
 hd_wallet::hd_wallet() : hd_wallet(false) {}
 
 hd_wallet::hd_wallet(bool testnet) {
     _entropy = bc::data_chunk(DEFAULT_ENTROPY_BITS / 8);
     bc::pseudo_random_fill(_entropy);
-    _testnet = testnet;
+    set_testnet(testnet);
 
     generate_mnemonic();
     generate_master_keys();
@@ -13,7 +21,7 @@ hd_wallet::hd_wallet(bool testnet) {
 
 hd_wallet::hd_wallet(const bc::data_chunk& entropy, bool testnet) {
     _entropy = entropy;
-    _testnet = testnet;
+    set_testnet(testnet);
 
     generate_mnemonic();
     generate_master_keys();
@@ -27,7 +35,7 @@ hd_wallet::hd_wallet(const bc::wallet::word_list& mnemonic, bool testnet) {
         throw std::invalid_argument("Mnemonic not valid");
     }
     _mnemonic = mnemonic;
-    _testnet = testnet;
+    set_testnet(testnet);
 
     generate_master_keys();
 }

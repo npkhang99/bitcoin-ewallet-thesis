@@ -122,7 +122,13 @@ private:
     hd_public _master_public;
     std::string _passphrase;
 
-    std::vector<uint32_t> _base_derive_path = {hd_private::first_hardened_key, 0};
+    // BIP-0044 base derive path
+    std::vector<uint32_t> _base_derive_path = {
+        hd_private::first_hardened_key + 44,    // Purpose
+        hd_private::first_hardened_key,         // Coin
+        hd_private::first_hardened_key,         // Account
+        0                                       // External/Internal
+    };
 
     uint32_t _first_unused = 0;
     uint32_t _next_child_key_index = 0;
@@ -135,6 +141,8 @@ private:
     void generate_master_keys();
 
     void explore(uint32_t begin);
+
+    void set_testnet(bool testnet);
 };
 
 

@@ -1,6 +1,7 @@
 #ifndef LIBBITCOIN_THESIS_UTILITIES_H
 #define LIBBITCOIN_THESIS_UTILITIES_H
 
+#include <cstdarg>
 #include <iostream>
 #include <string>
 

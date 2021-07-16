@@ -55,6 +55,13 @@ namespace client {
      */
     bool get_unspent_txs(Json::Value& out, const std::string& address,
                          const std::string& network = mainnet);
+
+    /**
+     * Get current BTC pricing
+     * @param out output double
+     * @return true if success, otherwise false
+     */
+    bool get_price(double& out);
 }
 
 #endif //LIBBITCOIN_THESIS_CLIENT_UTILITIES_H

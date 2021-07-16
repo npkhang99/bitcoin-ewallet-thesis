@@ -207,6 +207,9 @@ std::string hd_wallet::get_balance() {
     total_balance = available + pending;
     std::cout << "  Total fund: " << bc::encode_base10(total_balance, 8) << " BTC" << std::endl;
 
+    std::cout << "  Equals to: " << get_price(total_balance) << " VND"
+              << std::endl;
+
     return bc::encode_base10(available, 8);
 }
 

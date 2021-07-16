@@ -51,3 +51,33 @@ bc::byte_array<33> secp256k1_point(const bc::ec_secret& secret) {
 
     return pub_key;
 }
+
+std::string format_price(double price) {
+    std::string str_price = std::to_string(price);
+
+    uint32_t size = 0;
+    for (char c : str_price) {
+        if (!isdigit(c)) {
+            break;
+        }
+        size++;
+    }
+
+    for (uint32_t i = 0; i < size - 1; i++) {
+        if ((i + 1) % 3 == 0) {
+            str_price.insert(str_price.begin() + (size - i - 1), ',');
+        }
+    }
+
+    return str_price;
+}
+
+std::string get_price(uint64_t satoshi) {
+    double btc_price;
+    client::get_price(btc_price);
+
+    double satoshi_price = btc_price / 100'000'000;
+    double vnd_price = satoshi_price * (double) satoshi;
+
+    return format_price(vnd_price);
+}

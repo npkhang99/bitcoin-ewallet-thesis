@@ -97,7 +97,7 @@ bool interactive_shell::init_wallet(const std::vector<std::string>& mnemonic) {
     }
 
     std::cout << "Passphrase (leave empty if none): ";
-    std::string passphrase = "";
+    std::string passphrase;
     std::getline(std::cin, passphrase);
 
     if (mnemonic.empty()) {
@@ -159,16 +159,26 @@ void interactive_shell::list_transaction_hist() {
 
         std::cout << "Address " << address.encoded() << ":" << std::endl;
         for (const auto& tx : info["txs"]) {
-            std::cout << "  TXID: " << tx["txid"].asString() << std::endl;
-            std::cout << "    Block: " << tx["block_no"].asString() << std::endl;
-            std::cout << "    Confirmations: " << tx["confirmations"].asString()
-                      << std::endl;
-            std::cout << "    Value: " << tx["incoming"]["value"].asString()
-                      << " BTC" << std::endl;
-            std::cout << "    Spent: " << tx["incoming"]["spent"].asString()
-                      << std::endl;
             time_t trans_time = tx["time"].asInt64();
-            std::cout << "    Time: " <<  asctime(localtime(&trans_time))
+            std::string btc = tx["incoming"]["value"].asString();
+
+            uint64_t satoshi;
+            bc::decode_base10(satoshi, btc, 8);
+
+            std::string vnd = get_price(satoshi);
+
+            std::cout << format("  TXID: %s", tx["txid"].asCString())
+                      << std::endl;
+            std::cout << format("    Block: %llu", tx["block_no"].asUInt64())
+                      << std::endl;
+            std::cout << format("    Confirmations: %u",tx["confirmations"].asUInt())
+                      << std::endl;
+            std::cout << format("    Value: %s BTC (%s VND)", btc.c_str(),
+                                vnd.c_str()) << std::endl;
+            std::cout << format("    Spent: %s", tx["incoming"]["spent"].isNull()
+                                    ? "no" : tx["incoming"]["spent"].asCString())
+                      << std::endl;
+            std::cout << format("    Time: %s", asctime(localtime(&trans_time)))
                       << std::endl;
         }
     }

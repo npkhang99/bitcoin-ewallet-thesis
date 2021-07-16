@@ -74,3 +74,21 @@ bool client::get_unspent_txs(Json::Value& out, const std::string& address,
 
     return true;
 }
+
+bool client::get_price(double& out) {
+    std::string url =
+            "https://api.coindesk.com/v1/bpi/currentprice/VND.json";
+
+    try {
+        std::stringstream ss(http_client(url).execute());
+        Json::Value response;
+        ss >> response;
+
+        out = response["bpi"]["VND"]["rate_float"].asDouble();
+    } catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+
+    return true;
+}

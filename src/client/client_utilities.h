@@ -62,6 +62,16 @@ namespace client {
      * @return true if success, otherwise false
      */
     bool get_price(double& out);
+
+    /**
+     * Broadcast transaction to the bitcoin network
+     * @param out txid
+     * @param raw_tx raw transaction encoded in base16
+     * @param network mainnet or testnet
+     * @return true if success, otherwise false
+     */
+    bool send_raw_rx(std::string& out, const std::string& raw_tx,
+                     const std::string& network = mainnet);
 }
 
 #endif //LIBBITCOIN_THESIS_CLIENT_UTILITIES_H

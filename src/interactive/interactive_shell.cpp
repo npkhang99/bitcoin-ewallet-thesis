@@ -60,6 +60,25 @@ int interactive_shell::run(int argc, const char* argv[]) {
                 if (tbuilder.build(tx)) {
                     std::cout << "Your raw transaction: "
                               << bc::encode_base16(tx.to_data()) << std::endl;
+
+                    std::cout << "Would you like to send this transaction to "
+                                 "the network? (Y/n) ";
+
+                    cin_clear_line();
+
+                    bool send_tx = false;
+                    std::string ans;
+                    std::getline(std::cin, ans);
+
+                    if (ans.length() == 0 || ans == "y" || ans == "Y") {
+                        send_tx = true;
+                    }
+
+                    std::string txid;
+                    if (send_tx && send_transaction(tx, txid)) {
+                        std::cout << "Transaction sent successfully" << std::endl;
+                        std::cout << "Your TXID: " << txid << std::endl;
+                    }
                 } else {
                     std::cout << "Transaction building canceled" << std::endl;
                 }
@@ -182,4 +201,10 @@ void interactive_shell::list_transaction_hist() {
                       << std::endl;
         }
     }
+}
+
+bool interactive_shell::send_transaction(const transaction& tx,
+                                         std::string& txid) const {
+    return client::send_raw_rx(txid, bc::encode_base16(tx.to_data()),
+                               testnet ? client::testnet : client::mainnet);
 }

@@ -29,6 +29,9 @@ private:
     bool APP_LOOP;
 
     void list_transaction_hist();
+
+    bool send_transaction(const transaction& tx,
+                          std::string& txid) const;
 };
 
 

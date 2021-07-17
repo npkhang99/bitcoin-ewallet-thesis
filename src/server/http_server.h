@@ -11,6 +11,8 @@
 #include "components.h"
 #include "controller/controller.h"
 
+#include "../wallet/hd_wallet.h"
+
 using namespace oatpp;
 
 class http_server {

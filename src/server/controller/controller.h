@@ -20,12 +20,16 @@ public:
 
     ENDPOINT("GET", "/", root) {
         auto dto = message_dto::createShared();
-        dto->statusCode = 200;
+        dto->status_code = 200;
         dto->message = "Hello World!";
         return createDtoResponse(Status::CODE_200, dto);
     }
 
-    // Insert Your endpoints here !!!
+    ENDPOINT("POST", "/newwallet", create_wallet,
+             BODY_DTO(Object<new_wallet_dto>, new_wallet_passphrase)) {
+        OATPP_LOGD("Test", "passphrase='%s'", new_wallet_passphrase->passphrase->getData());
+        return createResponse(Status::CODE_200, "OK");
+    }
 };
 
 #include OATPP_CODEGEN_END(ApiController)

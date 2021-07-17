@@ -16,8 +16,8 @@ void http_server::server_run() {
 
     OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router);
 
-    auto myController = std::make_shared<controller>();
-    myController->addEndpointsToRouter(router);
+    auto root_controller = std::make_shared<controller>();
+    root_controller->addEndpointsToRouter(router);
 
     OATPP_COMPONENT(std::shared_ptr<oatpp::network::ConnectionHandler>, connection_handler);
     OATPP_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, connection_provider);

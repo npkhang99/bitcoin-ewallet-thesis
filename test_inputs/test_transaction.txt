@@ -3,12 +3,12 @@ loadwallet bench spice side slot orange brother one fetch sting evil prison good
 newtransaction
 help
 addinput
+2
+addoutput
+mgLLJ6pkvH9fgtqMcfaoWDWEMTbj8hmkBr
 1
 addoutput
-mmpx1rzE7Y6DF1ovBMRLTZ4BQ6WkXXyECZ
-1
-addoutput
-mmpx1rzE7Y6DF1ovBMRLTZ4BQ6WkXXyECZ
+mgLLJ6pkvH9fgtqMcfaoWDWEMTbj8hmkBr
 0.00000700
 done
 2

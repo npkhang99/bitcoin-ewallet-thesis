@@ -179,12 +179,6 @@ void interactive_shell::list_transaction_hist() {
         std::cout << "Address " << address.encoded() << ":" << std::endl;
         for (const auto& tx : info["txs"]) {
             time_t trans_time = tx["time"].asInt64();
-            std::string btc = tx["incoming"]["value"].asString();
-
-            uint64_t satoshi;
-            bc::decode_base10(satoshi, btc, 8);
-
-            std::string vnd = get_price(satoshi);
 
             std::cout << format("  TXID: %s", tx["txid"].asCString())
                       << std::endl;
@@ -192,10 +186,34 @@ void interactive_shell::list_transaction_hist() {
                       << std::endl;
             std::cout << format("    Confirmations: %u",tx["confirmations"].asUInt())
                       << std::endl;
-            std::cout << format("    Value: %s BTC (%s VND)", btc.c_str(),
-                                vnd.c_str()) << std::endl;
-            std::cout << format("    Spent: %s", tx["incoming"]["spent"].isNull()
-                                    ? "no" : tx["incoming"]["spent"].asCString())
+
+            bool is_incoming = true;
+            if (tx.get("incoming", Json::Value::null).isNull()) {
+                is_incoming = false;
+            }
+
+            std::string btc;
+            uint64_t satoshi;
+            std::string vnd;
+
+            if (is_incoming) {
+                std::string spent = tx["incoming"]["spent"].isNull() ?
+                        "no" : tx["incoming"]["spent"]["txid"].asString();
+
+                std::cout << format("    Spent: %s", spent.c_str())
+                          << std::endl;
+                btc = tx["incoming"]["value"].asString();
+                bc::decode_base10(satoshi, btc, 8);
+                vnd = get_price(satoshi);
+            } else {
+                btc = tx["outgoing"]["value"].asString();
+                bc::decode_base10(satoshi, btc, 8);
+                vnd = get_price(satoshi);
+            }
+
+            std::cout << format("    Value: %s%s BTC (%s%s VND)",
+                                !is_incoming ? "-" : "+", btc.c_str(),
+                                !is_incoming ? "-" : "+", vnd.c_str())
                       << std::endl;
             std::cout << format("    Time: %s", asctime(localtime(&trans_time)))
                       << std::endl;

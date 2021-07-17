@@ -181,8 +181,7 @@ payment_address hd_wallet::get_new_payment_address(bool increase) {
 
 std::string hd_wallet::get_balance() {
     hd_private base_priv = derive_private(_base_derive_path);
-    uint64_t total_balance = 0;
-    uint64_t available = 0;
+    uint64_t total = 0;
     uint64_t pending = 0;
 
     for (uint32_t index = 0; index < _next_child_key_index; index++) {
@@ -195,22 +194,19 @@ std::string hd_wallet::get_balance() {
         uint64_t balance;
 
         bc::decode_base10(balance, info["balance"].asString(), 8);
-        available += balance;
+        total += balance;
 
         bc::decode_base10(balance, info["pending_value"].asString(), 8);
         pending += balance;
     }
 
-    std::cout << "  Available fund: " << bc::encode_base10(available, 8) << " BTC" << std::endl;
-    std::cout << "  Pending fund: " << bc::encode_base10(pending, 8) << " BTC" << std::endl;
+    std::cout << "  Balance: " << bc::encode_base10(total, 8) << " BTC" << std::endl;
+    std::cout << "  Pending: " << bc::encode_base10(pending, 8) << " BTC" << std::endl;
 
-    total_balance = available + pending;
-    std::cout << "  Total fund: " << bc::encode_base10(total_balance, 8) << " BTC" << std::endl;
-
-    std::cout << "  Equals to: " << get_price(total_balance) << " VND"
+    std::cout << "  Equals to: " << get_price(total) << " VND"
               << std::endl;
 
-    return bc::encode_base10(available, 8);
+    return bc::encode_base10(total, 8);
 }
 
 std::vector<payment_address> hd_wallet::get_used_payment_addresses() {

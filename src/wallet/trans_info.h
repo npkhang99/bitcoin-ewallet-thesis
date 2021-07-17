@@ -12,7 +12,11 @@ struct trans_info {
     std::string to_string() const {
         std::string str;
         str = "TXID: " + bc::encode_hash(previous_tx.hash()) + " | " +
-              "Value: " + bc::encode_base10(value, 8) + " BTC";
+              "Value: " + bc::encode_base10(value, 8) + " BTC"
+#ifdef DEBUG
+              + " | Address: " + payment_address(priv).encoded()
+#endif
+              ;
         return str;
     }
 };

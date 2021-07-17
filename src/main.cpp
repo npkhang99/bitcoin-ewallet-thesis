@@ -27,6 +27,26 @@ int main(int argc, const char* argv[]) {
     }
 #endif
 
-    interactive_shell shell;
-    return shell.run(argc, argv);
+    bool testnet = false;
+    bool daemon = false;
+
+    for (int i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "-d")) {
+            daemon = true;
+        } else if (!strcmp(argv[i], "mainnet")) {
+            testnet = false;
+        } else if (!strcmp(argv[i], "testnet")) {
+            testnet = true;
+        } else if (!strcmp(argv[i], "help")) {
+            std::cout << format(usage, argv[0]) << std::endl;
+            return 1;
+        } else {
+            std::cout << "Unrecognized option(s)" << std::endl;
+            std::cout << format(usage, argv[0]) << std::endl;
+            return 1;
+        }
+    }
+
+    interactive_shell shell(testnet);
+    return shell.run();
 }

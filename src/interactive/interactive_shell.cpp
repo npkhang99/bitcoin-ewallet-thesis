@@ -6,22 +6,11 @@ interactive_shell::interactive_shell() {
     APP_LOOP = true;
 }
 
-int interactive_shell::run(int argc, const char* argv[]) {
-    if (argc > 2) {
-        std::cout << format(usage, argv[0]) << std::endl;
-        return 1;
-    }
+interactive_shell::interactive_shell(bool testnet) : interactive_shell() {
+    this->testnet = testnet;
+}
 
-    if (argc == 2 && strcmp(argv[1], "mainnet") != 0 &&
-            strcmp(argv[1], "testnet") != 0) {
-        std::cout << format(usage, argv[0]) << std::endl;
-        return 1;
-    }
-
-    if (argc == 2 && !strcmp(argv[1], "testnet")) {
-        testnet = true;
-    }
-
+int interactive_shell::run() {
     while (APP_LOOP) {
         std::string command;
         std::cout << "> ";

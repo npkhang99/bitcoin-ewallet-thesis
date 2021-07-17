@@ -16,8 +16,9 @@
 class interactive_shell {
 public:
     interactive_shell();
+    interactive_shell(bool testnet);
 
-    int run(int argc, const char* argv[]);
+    int run();
 
 private:
     bool init_wallet(const std::vector<std::string>& mnemonic = {});

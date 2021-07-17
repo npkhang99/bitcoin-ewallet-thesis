@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -DWITH_PNG -DWITH_QRENCODE -DWITH_
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 find_package(PkgConfig REQUIRED)
+find_package(oatpp REQUIRED)
 pkg_check_modules(BITCOIN REQUIRED libbitcoin)
 pkg_check_modules(CURL REQUIRED libcurl)
 pkg_check_modules(JSON REQUIRED jsoncpp)
@@ -38,9 +39,19 @@ add_executable(
 
         src/client/http_client.cpp src/client/http_client.h
         src/client/client_utilities.cpp src/client/client_utilities.h
+
+        src/server/http_server.cpp src/server/http_server.h
+        src/server/dto/dtos.h
+        src/server/components.h
+        src/server/controller/controller.h
 )
 
-target_link_libraries(bitcoin-ewallet-thesis ${BITCOIN_LIBRARIES} ${CURL_LIBRARIES} ${JSON_LIBRARIES})
+target_link_libraries(bitcoin-ewallet-thesis
+        ${BITCOIN_LIBRARIES}
+        ${CURL_LIBRARIES}
+        ${JSON_LIBRARIES}
+        oatpp::oatpp
+)
 target_link_directories(bitcoin-ewallet-thesis PUBLIC ${BITCOIN_LIBRARY_DIRS})
 target_include_directories(bitcoin-ewallet-thesis PUBLIC ${BITCOIN_INCLUDE_DIRS})
 target_compile_options(bitcoin-ewallet-thesis PUBLIC ${BITCOIN_CFLAGS_OTHER})

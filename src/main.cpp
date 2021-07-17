@@ -1,5 +1,6 @@
 #include <cstring>
 
+#include "server/http_server.h"
 #include "interactive/interactive_shell.h"
 
 #ifdef DEBUG
@@ -28,11 +29,11 @@ int main(int argc, const char* argv[]) {
 #endif
 
     bool testnet = false;
-    bool daemon = false;
+    bool use_server = false;
 
     for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "-d")) {
-            daemon = true;
+        if (!strcmp(argv[i], "-s") || !strcmp(argv[i], "--server")) {
+            use_server = true;
         } else if (!strcmp(argv[i], "mainnet")) {
             testnet = false;
         } else if (!strcmp(argv[i], "testnet")) {
@@ -45,6 +46,12 @@ int main(int argc, const char* argv[]) {
             std::cout << format(usage, argv[0]) << std::endl;
             return 1;
         }
+    }
+
+    if (use_server) {
+        http_server server;
+        server.run();
+        return 0;
     }
 
     interactive_shell shell(testnet);

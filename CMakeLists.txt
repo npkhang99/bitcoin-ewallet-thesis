@@ -44,7 +44,7 @@ add_executable(
         src/server/dto/dtos.h
         src/server/components.h
         src/server/controller/controller.h
-)
+        src/server/data.h)
 
 target_link_libraries(bitcoin-ewallet-thesis
         ${BITCOIN_LIBRARIES}

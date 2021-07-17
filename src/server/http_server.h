@@ -8,6 +8,7 @@
 #include <oatpp/network/Server.hpp>
 #include <oatpp/network/tcp/server/ConnectionProvider.hpp>
 
+#include "data.h"
 #include "components.h"
 #include "controller/controller.h"
 
@@ -23,8 +24,6 @@ public:
     void run();
 
 private:
-    std::string _app_name = "SERVER";
-
     void server_run();
 };
 

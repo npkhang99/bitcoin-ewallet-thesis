@@ -2,8 +2,9 @@
 
 http_server::http_server() {}
 
-http_server::http_server(const std::string& app_name)
-        : _app_name(app_name) {}
+http_server::http_server(const std::string& app_name) {
+    server::app_name = app_name;
+}
 
 void http_server::run() {
     base::Environment::init();
@@ -24,7 +25,7 @@ void http_server::server_run() {
 
     network::Server server(connection_provider, connection_handler);
 
-    OATPP_LOGI(_app_name, "Server running on port %s",
+    OATPP_LOGI(server::app_name, "Server running on port %s",
                connection_provider->getProperty("port").getData());
 
     server.run();

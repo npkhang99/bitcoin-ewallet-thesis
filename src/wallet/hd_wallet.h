@@ -65,6 +65,8 @@ public:
      */
     std::string get_balance();
 
+    std::string get_mnemonic() const;
+
     /**
      * Get all used payment addresses
      * @return used payment addresses

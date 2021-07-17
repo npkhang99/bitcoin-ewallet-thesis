@@ -242,3 +242,7 @@ std::vector<trans_info> hd_wallet::get_unspent_txs() {
 
     return transactions;
 }
+
+std::string hd_wallet::get_mnemonic() const {
+    return bc::join(_mnemonic);
+}

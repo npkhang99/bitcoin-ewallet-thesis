@@ -225,7 +225,7 @@ std::string transaction_builder::get_total_avail_fund() {
 
 void transaction_builder::sign_tx() {
     for (uint32_t i = 0; i < choosen_txs.size(); i++) {
-        hd_private private_key = unspents[i].priv;
+        hd_private private_key = unspents[choosen_txs[i]].priv;
         temp.sign(i, private_key.to_public().get_point(),
                   payment_address(private_key).get_hash(),
                   private_key.get_secret(), 0x01);
@@ -239,7 +239,7 @@ uint64_t transaction_builder::calculate_max_fee() {
     tx.add_output(change);
 
     for (uint32_t i = 0; i < choosen_txs.size(); i++) {
-        hd_private private_key = unspents[i].priv;
+        hd_private private_key = unspents[choosen_txs[i]].priv;
         tx.sign(i, private_key.to_public().get_point(),
                 payment_address(private_key).get_hash(),
                 private_key.get_secret(), 0x01);
@@ -296,7 +296,7 @@ uint64_t transaction_builder::calculate_tx_fee(uint64_t fee_per_byte) {
     tx.add_output(change);
 
     for (uint32_t i = 0; i < choosen_txs.size(); i++) {
-        hd_private private_key = unspents[i].priv;
+        hd_private private_key = unspents[choosen_txs[i]].priv;
         tx.sign(i, private_key.to_public().get_point(),
                 payment_address(private_key).get_hash(),
                 private_key.get_secret(), 0x01);

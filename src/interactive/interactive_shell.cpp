@@ -50,8 +50,8 @@ int interactive_shell::run() {
                     std::cout << "Your raw transaction: "
                               << bc::encode_base16(tx.to_data()) << std::endl;
 
-                    std::cout << "Would you like to send this transaction to "
-                                 "the network? (Y/n) ";
+                    std::cout << "Would you like to broadcast this transaction?"
+                                 " (Y/n) ";
 
                     cin_clear_line();
 

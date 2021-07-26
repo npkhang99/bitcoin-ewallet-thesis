@@ -1,0 +1,29 @@
+help
+newwallet
+passphrase: abc
+getbalance
+newaddress
+
+loadwallet trend one help silly moon dismiss lonely minor ivory mother auction dynamic neither biology payment energy length ask dial despair wine forum when naive
+history
+newtransaction
+help
+addinput
+1
+addinput
+2
+addoutput
+mr8YqKF2nNHVaitPF24Sw4QtVeshxx7Epv
+0.00001
+addoutput
+mvAAXhmhZ9meRvfUamBXZzw92CXrKjKPt1
+0.00001
+addmessage
+FIT-HCMUS
+done
+2
+y
+exit
+
+TXID: eec39856c1db6d829b1f00e25cd826cb44e78f2a739471732b0ff5f311f41a65
+

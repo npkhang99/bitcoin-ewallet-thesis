@@ -15,9 +15,9 @@ enum tcommands {
 };
 
 const static char* tnote[] = {
-        "Note: you do not need to specify the change output,",
-        "it will automatically added when you finish the transaction",
-        "(use the 'done' command)"
+        "Note: you do not need to specify the change output, change",
+        "output will be automatically added when you finish building",
+        "the transaction (the 'done' command)"
 };
 
 const static char* thelp[] = {

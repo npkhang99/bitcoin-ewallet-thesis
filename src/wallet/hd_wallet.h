@@ -77,6 +77,8 @@ public:
      */
     std::vector<trans_info> get_unspent_txs();
 
+    std::string get_mnemonic() const;
+
 #ifdef DEBUG
     /**
      * Dumps wallet data for debugging purposes

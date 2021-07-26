@@ -126,14 +126,14 @@ void hd_wallet::generate_master_keys() {
     }
 
     _master_public = _master_private.to_public();
-
-    std::cout << "Wallet successfully created" << std::endl;
-    std::cout << "Your mnemonic is:" << std::endl;
-    std::cout << bc::join(_mnemonic) << std::endl;
 }
 
 void hd_wallet::set_base_derive_path(const std::vector<uint32_t>& base_derive_path) {
     _base_derive_path = base_derive_path;
+}
+
+std::string hd_wallet::get_mnemonic() const {
+    return bc::join(_mnemonic);
 }
 
 void hd_wallet::explore() {

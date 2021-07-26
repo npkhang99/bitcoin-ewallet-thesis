@@ -21,13 +21,6 @@ public:
 
 public:
 
-    ENDPOINT("GET", "/", root) {
-        auto dto = message_dto::createShared();
-        dto->status_code = 200;
-        dto->message = "Hello World!";
-        return createDtoResponse(Status::CODE_200, dto);
-    }
-
     ENDPOINT("POST", "/newwallet", create_wallet,
              BODY_DTO(Object<new_wallet_dto>, new_wallet_passphrase)) {
         std::string passphrase = new_wallet_passphrase->passphrase->std_str();
@@ -36,7 +29,7 @@ public:
             server::wallet = new hd_wallet();
             server::wallet->set_passphrase(passphrase);
         } catch (std::exception& e) {
-            auto dto = fail_dto::createShared();
+            auto dto = message_dto::createShared();
             dto->status = "failed";
             dto->message = e.what();
             return createDtoResponse(Status::CODE_400, dto);
@@ -52,9 +45,19 @@ public:
 
     ENDPOINT("POST", "/loadwallet", load_wallet,
              BODY_DTO(Object<load_wallet_dto>, wallet_init_info)) {
-        OATPP_LOGD("load-wallet", "mnemonic='%s', passphrase = '%s'",
-                   wallet_init_info->mnemonic->getData(),
-                   wallet_init_info->passprhase->getData());
+        std::string mnemonic = wallet_init_info->mnemonic->std_str();
+        std::string passphrase = wallet_init_info->passphrase->std_str();
+
+        try {
+            server::wallet = new hd_wallet(mnemonic);
+            server::wallet->set_passphrase(passphrase);
+        } catch (std::exception& e) {
+            auto dto = message_dto::createShared();
+            dto->status = "failed";
+            dto->message = e.what();
+            return createDtoResponse(Status::CODE_400, dto);
+        }
+
         return createResponse(Status::CODE_200, "OK");
     }
 

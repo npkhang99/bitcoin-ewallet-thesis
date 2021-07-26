@@ -8,17 +8,10 @@
 #include OATPP_CODEGEN_BEGIN(DTO)
 
 class message_dto : public oatpp::DTO {
-    DTO_INIT(message_dto, DTO /* Extends */)
+    DTO_INIT(message_dto, DTO)
 
-    DTO_FIELD(Int32, status_code);   // Status code field
-    DTO_FIELD(String, message);     // Message field
-};
-
-class fail_dto : public oatpp::DTO {
-    DTO_INIT(fail_dto, DTO /* Extends */)
-
-    DTO_FIELD(String, status);   // Status code field
-    DTO_FIELD(String, message);     // Message field
+    DTO_FIELD(String, status);
+    DTO_FIELD(String, message);
 };
 
 class new_wallet_dto : public oatpp::DTO {
@@ -31,7 +24,7 @@ class load_wallet_dto : public oatpp::DTO {
     DTO_INIT(load_wallet_dto, DTO);
 
     DTO_FIELD(String, mnemonic);
-    DTO_FIELD(String, passprhase);
+    DTO_FIELD(String, passphrase);
 };
 
 class wallet_init_dto : public oatpp::DTO {

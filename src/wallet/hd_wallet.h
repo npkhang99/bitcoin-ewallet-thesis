@@ -77,7 +77,7 @@ public:
      */
     std::vector<trans_info> get_unspent_txs();
 
-    std::string get_mnemonic() const;
+    bc::wallet::word_list get_mnemonic() const;
 
 #ifdef DEBUG
     /**
@@ -99,10 +99,6 @@ public:
 
     bc::data_chunk get_seed() const {
         return _seed;
-    }
-
-    bc::wallet::word_list get_mnemonic() const {
-        return _mnemonic;
     }
 
     hd_private get_master_private() const {

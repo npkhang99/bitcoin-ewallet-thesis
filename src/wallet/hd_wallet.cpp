@@ -132,8 +132,8 @@ void hd_wallet::set_base_derive_path(const std::vector<uint32_t>& base_derive_pa
     _base_derive_path = base_derive_path;
 }
 
-std::string hd_wallet::get_mnemonic() const {
-    return bc::join(_mnemonic);
+bc::wallet::word_list hd_wallet::get_mnemonic() const {
+    return _mnemonic;
 }
 
 void hd_wallet::explore() {

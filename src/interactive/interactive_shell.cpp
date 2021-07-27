@@ -111,7 +111,7 @@ bool interactive_shell::init_wallet(const std::vector<std::string>& mnemonic) {
     try {
         if (mnemonic.empty()) {
             wallet = new hd_wallet(testnet);
-            std::cout << "Your mnemonic is: " << wallet->get_mnemonic()
+            std::cout << "Your mnemonic is: " << bc::join(wallet->get_mnemonic())
                       << std::endl;
         } else {
             wallet = new hd_wallet(mnemonic, testnet);

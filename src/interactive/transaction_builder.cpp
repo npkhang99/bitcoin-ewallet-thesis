@@ -1,6 +1,6 @@
 #include "transaction_builder.h"
 
-transaction_builder::transaction_builder(hd_wallet* wallet, bool testnet) {
+transaction_builder::transaction_builder(std::shared_ptr<hd_wallet>& wallet, bool testnet) {
     if (wallet == nullptr) {
         throw std::invalid_argument("wallet must not be null");
     }

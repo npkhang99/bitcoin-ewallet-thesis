@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <ctime>
+#include <memory>
 
 #include "data.h"
 #include "utilities.h"
@@ -26,7 +27,7 @@ private:
     void load_wallet();
 
     bool testnet;
-    hd_wallet* wallet;
+    std::shared_ptr<hd_wallet> wallet;
     bool APP_LOOP;
 
     void list_transaction_hist();

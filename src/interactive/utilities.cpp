@@ -6,7 +6,7 @@ std::string format(const char* fmt, ...) {
     va_start(ap, fmt);
     std::vsprintf(buffer, fmt, ap);
     va_end(ap);
-    return std::string(buffer);
+    return { buffer };
 }
 
 bool need_wallet(commands cmd) {
@@ -18,13 +18,14 @@ bool need_wallet(commands cmd) {
     return true;
 }
 
-commands get_command(const std::string& arg, const hd_wallet* wallet) {
+commands get_command(const std::string& arg,
+                     const std::shared_ptr<hd_wallet>& wallet) {
     if (support_commands.find(arg) == support_commands.end()) {
         std::cout << "Unknown command" << std::endl;
         return commands::HELP;
     }
 
-    if (wallet == nullptr && need_wallet(support_commands.find(arg)->second)) {
+    if (!wallet && need_wallet(support_commands.find(arg)->second)) {
         std::cerr << "you need to create or load a wallet before using this command"
                   << std::endl;
         return commands::HELP;

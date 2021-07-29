@@ -4,6 +4,7 @@
 #include <string>
 #include <cctype>
 #include <algorithm>
+#include <memory>
 
 #include <bitcoin/bitcoin.hpp>
 
@@ -19,7 +20,7 @@
 /// An interactive shell for building transaction
 class transaction_builder {
 public:
-    transaction_builder(hd_wallet* wallet, bool testnet);
+    transaction_builder(std::shared_ptr<hd_wallet>& wallet, bool testnet);
 
     /**
      * Start sub-shell
@@ -27,7 +28,7 @@ public:
     bool build(transaction& tx);
 
 private:
-    hd_wallet* wallet;
+    std::shared_ptr<hd_wallet> wallet;
 
     bool testnet;
     bool TRANSACTION_LOOP = true;

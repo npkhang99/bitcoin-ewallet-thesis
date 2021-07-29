@@ -11,7 +11,8 @@
 
 std::string format(const char* fmt, ...);
 
-commands get_command(const std::string& arg, const hd_wallet* wallet);
+commands get_command(const std::string& arg,
+                     const std::shared_ptr<hd_wallet>& wallet);
 
 void cin_clear_line();
 

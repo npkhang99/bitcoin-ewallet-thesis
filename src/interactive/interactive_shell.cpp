@@ -91,7 +91,6 @@ int interactive_shell::run() {
     }
 
     if (wallet != nullptr) {
-        delete wallet;
         wallet = nullptr;
     }
 
@@ -100,7 +99,6 @@ int interactive_shell::run() {
 
 bool interactive_shell::init_wallet(const std::vector<std::string>& mnemonic) {
     if (wallet != nullptr) {
-        delete wallet;
         wallet = nullptr;
     }
 
@@ -110,16 +108,15 @@ bool interactive_shell::init_wallet(const std::vector<std::string>& mnemonic) {
 
     try {
         if (mnemonic.empty()) {
-            wallet = new hd_wallet(testnet);
+            wallet = std::make_shared<hd_wallet>(testnet);
             std::cout << "Your mnemonic is: " << bc::join(wallet->get_mnemonic())
                       << std::endl;
         } else {
-            wallet = new hd_wallet(mnemonic, testnet);
+            wallet = std::make_shared<hd_wallet>(mnemonic, testnet);
         }
     } catch (std::exception& e) {
         std::cout << "error while create new exception "
                   << e.what() << std::endl;
-        delete wallet;
         wallet = nullptr;
         return false;
     }

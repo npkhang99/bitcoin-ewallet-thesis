@@ -6,8 +6,18 @@ void test_address() {
     bc::ec_secret secret_ec = generate_secret(
             "067375cf2f49e9bc7b759acdcc6b9cd43326a550415eff5ba8d5e266d7adfca3");
     auto key_pair = generate_wallet_ec_key_pair(secret_ec);
-    std::string address = payment_address(key_pair.first).encoded();
-    std::cout << "Bitcoin address:" << std::endl << address << std::endl;
+    std::cout << "Private key:" << std::endl
+              << bc::encode_base16(key_pair.second) << std::endl;
+    std::cout << "Public key:" << std::endl
+              << bc::encode_base16(key_pair.first) << std::endl;
+    
+    payment_address address = payment_address(key_pair.first);
+    
+    std::string encoded_address = address.encoded();
+    std::cout << "Public key hash:" << std::endl
+              << bc::encode_base16(address.get_hash()) << std::endl;
+    std::cout << "Bitcoin address:" << std::endl << encoded_address
+              << std::endl;
     std::cout << std::endl;
 }
 

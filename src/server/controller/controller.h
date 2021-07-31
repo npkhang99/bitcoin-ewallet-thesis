@@ -1,6 +1,9 @@
 #ifndef BITCOIN_EWALLET_THESIS_CONTROLLER_H
 #define BITCOIN_EWALLET_THESIS_CONTROLLER_H
 
+#include <string>
+#include <memory>
+
 #include <oatpp/web/server/api/ApiController.hpp>
 #include <oatpp/core/macro/codegen.hpp>
 #include <oatpp/core/macro/component.hpp>
@@ -26,7 +29,7 @@ public:
         std::string passphrase = new_wallet_passphrase->passphrase->std_str();
 
         try {
-            server::wallet = new hd_wallet();
+            server::wallet = std::make_shared<hd_wallet>();
             server::wallet->set_passphrase(passphrase);
         } catch (std::exception& e) {
             auto dto = message_dto::createShared();
@@ -49,7 +52,7 @@ public:
         std::string passphrase = wallet_init_info->passphrase->std_str();
 
         try {
-            server::wallet = new hd_wallet(mnemonic);
+            server::wallet = std::make_shared<hd_wallet>(mnemonic);
             server::wallet->set_passphrase(passphrase);
         } catch (std::exception& e) {
             auto dto = message_dto::createShared();

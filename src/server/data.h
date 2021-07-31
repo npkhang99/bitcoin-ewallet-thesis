@@ -3,11 +3,12 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 
 #include "../wallet/hd_wallet.h"
 
 namespace server {
-    static hd_wallet* wallet = nullptr;
+    static std::shared_ptr<hd_wallet> wallet = nullptr;
     static std::string app_name = "SERVER";
 }
 

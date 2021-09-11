@@ -23,10 +23,11 @@ This repository contains multiple directories:
 
 1. Build from scratch.
    
-    The project was built using little help from bitcoin development libraries (libbitcoin in this case) to
-    demonstrate the level of understanding of the subject to the council.
-    Libbitcoin usage is only limited to: containers and operations for locking and unlocking scripts, and
-    cryptographic functions like: SHA256, RIPEMD160, ECDSA, ...
+    The project was built using little help from bitcoin development libraries (libbitcoin in this case) with
+    all the core functions (key generation processes and transaction building) demonstrate the level of 
+    understanding of the subject to the council.
+    Libbitcoin usage is only limited to: containers and operations for locking and unlocking scripts, some
+    provided type defines for a more readable code, and cryptographic functions like: SHA256, RIPEMD160, ...
 
 2. HD wallet structure.
 3. A simpler version of BIP-044 applied (only support 1 account).
